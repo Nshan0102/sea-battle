@@ -1,0 +1,16 @@
+td{
+    border: 1px solid black;
+    width: 30px;
+    height: 30px;
+    background: #7bc4ff;
+    text-align: center;
+    font-weight: bold;
+}
+
+.broken {
+    background: red!important;
+}
+
+.healthy {
+    background: green!important;
+}
