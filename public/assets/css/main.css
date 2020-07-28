@@ -14,3 +14,16 @@ td{
 .healthy {
     background: green!important;
 }
+
+.width-100 {
+    width: 100%!important;
+}
+
+#owner{
+    margin: 5px;
+}
+
+#opponent{
+    margin: 5px;
+}
+
