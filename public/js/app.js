@@ -6156,9 +6156,10 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
 window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   broadcaster: 'pusher',
-  key: "",
-  cluster: "mt1"
+  key: "71adf3667c21d808b3c9",
+  cluster: "ap2"
 });
+bla;
 
 /***/ }),
 

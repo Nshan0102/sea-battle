@@ -27,3 +27,8 @@ td{
     margin: 5px;
 }
 
+.join-link {
+    padding: 10px;
+    border-radius: 25px;
+    background: #7bc4ff82;
+}

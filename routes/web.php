@@ -21,8 +21,9 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/play', function (){
-    return view('room.room')->with([
-        'room_id' => '4asf521eaf1g'
-    ]);
+
+Route::middleware('auth')->group(function (){
+    Route::get('/play', 'RoomController@create')->name('play');
+
+    Route::get('/join/{room}', 'RoomController@join')->name('join');
 });

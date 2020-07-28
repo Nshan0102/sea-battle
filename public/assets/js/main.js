@@ -1,4 +1,4 @@
-let orientation = "down";
+let orientation = "right";
 let prepared = [];
 let selected = {
     id: "",

@@ -15,6 +15,7 @@ class CreateRoomsTable extends Migration
     {
         Schema::create('rooms', function (Blueprint $table) {
             $table->id();
+            $table->string('join_hash');
             $table->bigInteger('owner_id');
             $table->bigInteger('opponent_id')->nullable();
             $table->bigInteger('turn')->comment('ID of user whose turn is now');

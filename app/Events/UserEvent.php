@@ -14,37 +14,20 @@ class UserEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    /**
-     * Create a new event instance.
-     *
-     * @return void
-     */
-    public function __construct()
+    public $message;
+
+    public function __construct($message)
     {
-        //
+        $this->message = $message;
     }
 
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return \Illuminate\Broadcasting\Channel|array
-     */
     public function broadcastOn()
     {
-        return new Channel('user-channel');
+        return ['my-channel'];
     }
-
 
     public function broadcastAs()
     {
-        return 'UserEvent';
-    }
-
-
-    public function broadcastWith()
-    {
-        return [
-            'key' => 'value'
-        ];
+        return 'my-event';
     }
 }

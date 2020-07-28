@@ -2,51 +2,65 @@
 @section('content')
     <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
         <div class="container">
-            <div class="row d-flex justify-content-between mb-2 width-100">
-                <div class="mb-3 mr-3">
-                    <button data-used="false" class="orientation btn btn-primary mr-2" data-orientation="down">
-                        <i class="fas fa-arrow-down" style="color: black"></i>
-                    </button>
-                    <button data-used="false" class="orientation btn btn-outline-primary" data-orientation="right">
-                        <i class="fas fa-arrow-right" style="color: black"></i>
-                    </button>
+            <div class="row d-flex justify-content-center mb-2 width-100">
+                <div class="d-flex justify-content-center align-items-center flex-column mb-3 mr-3">
+                    <div>
+                        <button title="Set ship direction from LEFT to RIGHT" data-used="false"
+                                class="orientation btn btn-primary" data-orientation="right">
+                            <i class="fas fa-arrow-right" style="color: black"></i>
+                        </button>
+                        <button title="Set ship direction from UP to DOWN" data-used="false"
+                                class="orientation btn btn-outline-primary mr-2" data-orientation="down">
+                            <i class="fas fa-arrow-down" style="color: black"></i>
+                        </button>
+                    </div>
                 </div>
                 <div class="mb-3 mr-3">
                     <button class="btn btn-success" data-used="false" onclick="choose(1, 'one-0')" id="one-0">
-                        1
+                        <i class="fas fa-ship"></i>
                     </button>
                     <button class="btn btn-success" data-used="false" onclick="choose(1, 'one-1')" id="one-1">
-                        1
+                        <i class="fas fa-ship"></i>
                     </button>
                     <button class="btn btn-success" data-used="false" onclick="choose(1, 'one-2')" id="one-2">
-                        1
+                        <i class="fas fa-ship"></i>
                     </button>
                     <button class="btn btn-success" data-used="false" onclick="choose(1, 'one-3')" id="one-3">
-                        1
+                        <i class="fas fa-ship"></i>
                     </button>
                 </div>
                 <div class="mb-3 mr-3">
                     <button class="btn btn-success" data-used="false" onclick="choose(2, 'two-0')" id="two-0">
-                        2
+                        <i class="fas fa-ship"></i>
+                        <i class="fas fa-ship"></i>
                     </button>
                     <button class="btn btn-success" data-used="false" onclick="choose(2, 'two-1')" id="two-1">
-                        2
+                        <i class="fas fa-ship"></i>
+                        <i class="fas fa-ship"></i>
                     </button>
                     <button class="btn btn-success" data-used="false" onclick="choose(2, 'two-2')" id="two-2">
-                        2
+                        <i class="fas fa-ship"></i>
+                        <i class="fas fa-ship"></i>
                     </button>
                 </div>
                 <div class="mb-3 mr-3">
                     <button class="btn btn-success" data-used="false" onclick="choose(3, 'three-0')" id="three-0">
-                        3
+                        <i class="fas fa-ship"></i>
+                        <i class="fas fa-ship"></i>
+                        <i class="fas fa-ship"></i>
                     </button>
                     <button class="btn btn-success" data-used="false" onclick="choose(3, 'three-1')" id="three-1">
-                        3
+                        <i class="fas fa-ship"></i>
+                        <i class="fas fa-ship"></i>
+                        <i class="fas fa-ship"></i>
                     </button>
                 </div>
                 <div class="mb-3 mr-3">
                     <button class="btn btn-success" data-used="false" onclick="choose(4, 'four-0')" id="four-0">
-                        4
+                        <i class="fas fa-ship"></i>
+                        <i class="fas fa-ship"></i>
+                        <i class="fas fa-ship"></i>
+                        <i class="fas fa-ship"></i>
                     </button>
                 </div>
             </div>
@@ -54,8 +68,12 @@
     </nav>
     <main class="py-4">
         <div class="container">
-            <div class="row d-flex justify-content-around align-items-center">
-                <h5>{{$room_id}}</h5>
+            <div class="row d-flex justify-content-around align-items-center m-3">
+                @if($room->owner->id == auth()->user()->id)
+                    <a href="{{route('join', $room)}}">
+                        <h5 class="join-link">{{route('join', $room)}}</h5>
+                    </a>
+                @endif
             </div>
             <div class="row d-flex justify-content-around align-items-center">
                 <div class="d-flex justify-content-start align-items-center flex-column">
@@ -90,119 +108,119 @@
                         </tr>
                         <tr>
                             <td data-used="false" data-index="">B</td>
-                            <td data-used="false" data-index="2-1" ></td>
-                            <td data-used="false" data-index="2-2" ></td>
-                            <td data-used="false" data-index="2-3" ></td>
-                            <td data-used="false" data-index="2-4" ></td>
-                            <td data-used="false" data-index="2-5" ></td>
-                            <td data-used="false" data-index="2-6" ></td>
-                            <td data-used="false" data-index="2-7" ></td>
-                            <td data-used="false" data-index="2-8" ></td>
-                            <td data-used="false" data-index="2-9" ></td>
+                            <td data-used="false" data-index="2-1"></td>
+                            <td data-used="false" data-index="2-2"></td>
+                            <td data-used="false" data-index="2-3"></td>
+                            <td data-used="false" data-index="2-4"></td>
+                            <td data-used="false" data-index="2-5"></td>
+                            <td data-used="false" data-index="2-6"></td>
+                            <td data-used="false" data-index="2-7"></td>
+                            <td data-used="false" data-index="2-8"></td>
+                            <td data-used="false" data-index="2-9"></td>
                             <td data-used="false" data-index="2-10"></td>
                         </tr>
                         <tr>
                             <td data-used="false" data-index="">C</td>
-                            <td data-used="false" data-index="3-1" ></td>
-                            <td data-used="false" data-index="3-2" ></td>
-                            <td data-used="false" data-index="3-3" ></td>
-                            <td data-used="false" data-index="3-4" ></td>
-                            <td data-used="false" data-index="3-5" ></td>
-                            <td data-used="false" data-index="3-6" ></td>
-                            <td data-used="false" data-index="3-7" ></td>
-                            <td data-used="false" data-index="3-8" ></td>
-                            <td data-used="false" data-index="3-9" ></td>
+                            <td data-used="false" data-index="3-1"></td>
+                            <td data-used="false" data-index="3-2"></td>
+                            <td data-used="false" data-index="3-3"></td>
+                            <td data-used="false" data-index="3-4"></td>
+                            <td data-used="false" data-index="3-5"></td>
+                            <td data-used="false" data-index="3-6"></td>
+                            <td data-used="false" data-index="3-7"></td>
+                            <td data-used="false" data-index="3-8"></td>
+                            <td data-used="false" data-index="3-9"></td>
                             <td data-used="false" data-index="3-10"></td>
                         </tr>
                         <tr>
                             <td data-used="false" data-index="">D</td>
-                            <td data-used="false" data-index="4-1" ></td>
-                            <td data-used="false" data-index="4-2" ></td>
-                            <td data-used="false" data-index="4-3" ></td>
-                            <td data-used="false" data-index="4-4" ></td>
-                            <td data-used="false" data-index="4-5" ></td>
-                            <td data-used="false" data-index="4-6" ></td>
-                            <td data-used="false" data-index="4-7" ></td>
-                            <td data-used="false" data-index="4-8" ></td>
-                            <td data-used="false" data-index="4-9" ></td>
+                            <td data-used="false" data-index="4-1"></td>
+                            <td data-used="false" data-index="4-2"></td>
+                            <td data-used="false" data-index="4-3"></td>
+                            <td data-used="false" data-index="4-4"></td>
+                            <td data-used="false" data-index="4-5"></td>
+                            <td data-used="false" data-index="4-6"></td>
+                            <td data-used="false" data-index="4-7"></td>
+                            <td data-used="false" data-index="4-8"></td>
+                            <td data-used="false" data-index="4-9"></td>
                             <td data-used="false" data-index="4-10"></td>
                         </tr>
                         <tr>
                             <td data-used="false" data-index="">E</td>
-                            <td data-used="false" data-index="5-1" ></td>
-                            <td data-used="false" data-index="5-2" ></td>
-                            <td data-used="false" data-index="5-3" ></td>
-                            <td data-used="false" data-index="5-4" ></td>
-                            <td data-used="false" data-index="5-5" ></td>
-                            <td data-used="false" data-index="5-6" ></td>
-                            <td data-used="false" data-index="5-7" ></td>
-                            <td data-used="false" data-index="5-8" ></td>
-                            <td data-used="false" data-index="5-9" ></td>
+                            <td data-used="false" data-index="5-1"></td>
+                            <td data-used="false" data-index="5-2"></td>
+                            <td data-used="false" data-index="5-3"></td>
+                            <td data-used="false" data-index="5-4"></td>
+                            <td data-used="false" data-index="5-5"></td>
+                            <td data-used="false" data-index="5-6"></td>
+                            <td data-used="false" data-index="5-7"></td>
+                            <td data-used="false" data-index="5-8"></td>
+                            <td data-used="false" data-index="5-9"></td>
                             <td data-used="false" data-index="5-10"></td>
                         </tr>
                         <tr>
                             <td data-used="false" data-index="">F</td>
-                            <td data-used="false" data-index="6-1" ></td>
-                            <td data-used="false" data-index="6-2" ></td>
-                            <td data-used="false" data-index="6-3" ></td>
-                            <td data-used="false" data-index="6-4" ></td>
-                            <td data-used="false" data-index="6-5" ></td>
-                            <td data-used="false" data-index="6-6" ></td>
-                            <td data-used="false" data-index="6-7" ></td>
-                            <td data-used="false" data-index="6-8" ></td>
-                            <td data-used="false" data-index="6-9" ></td>
+                            <td data-used="false" data-index="6-1"></td>
+                            <td data-used="false" data-index="6-2"></td>
+                            <td data-used="false" data-index="6-3"></td>
+                            <td data-used="false" data-index="6-4"></td>
+                            <td data-used="false" data-index="6-5"></td>
+                            <td data-used="false" data-index="6-6"></td>
+                            <td data-used="false" data-index="6-7"></td>
+                            <td data-used="false" data-index="6-8"></td>
+                            <td data-used="false" data-index="6-9"></td>
                             <td data-used="false" data-index="6-10"></td>
                         </tr>
                         <tr>
                             <td data-used="false" data-index="">G</td>
-                            <td data-used="false" data-index="7-1" ></td>
-                            <td data-used="false" data-index="7-2" ></td>
-                            <td data-used="false" data-index="7-3" ></td>
-                            <td data-used="false" data-index="7-4" ></td>
-                            <td data-used="false" data-index="7-5" ></td>
-                            <td data-used="false" data-index="7-6" ></td>
-                            <td data-used="false" data-index="7-7" ></td>
-                            <td data-used="false" data-index="7-8" ></td>
-                            <td data-used="false" data-index="7-9" ></td>
+                            <td data-used="false" data-index="7-1"></td>
+                            <td data-used="false" data-index="7-2"></td>
+                            <td data-used="false" data-index="7-3"></td>
+                            <td data-used="false" data-index="7-4"></td>
+                            <td data-used="false" data-index="7-5"></td>
+                            <td data-used="false" data-index="7-6"></td>
+                            <td data-used="false" data-index="7-7"></td>
+                            <td data-used="false" data-index="7-8"></td>
+                            <td data-used="false" data-index="7-9"></td>
                             <td data-used="false" data-index="7-10"></td>
                         </tr>
                         <tr>
                             <td data-used="false" data-index="">H</td>
-                            <td data-used="false" data-index="8-1" ></td>
-                            <td data-used="false" data-index="8-2" ></td>
-                            <td data-used="false" data-index="8-3" ></td>
-                            <td data-used="false" data-index="8-4" ></td>
-                            <td data-used="false" data-index="8-5" ></td>
-                            <td data-used="false" data-index="8-6" ></td>
-                            <td data-used="false" data-index="8-7" ></td>
-                            <td data-used="false" data-index="8-8" ></td>
-                            <td data-used="false" data-index="8-9" ></td>
+                            <td data-used="false" data-index="8-1"></td>
+                            <td data-used="false" data-index="8-2"></td>
+                            <td data-used="false" data-index="8-3"></td>
+                            <td data-used="false" data-index="8-4"></td>
+                            <td data-used="false" data-index="8-5"></td>
+                            <td data-used="false" data-index="8-6"></td>
+                            <td data-used="false" data-index="8-7"></td>
+                            <td data-used="false" data-index="8-8"></td>
+                            <td data-used="false" data-index="8-9"></td>
                             <td data-used="false" data-index="8-10"></td>
                         </tr>
                         <tr>
                             <td data-used="false" data-index="">I</td>
-                            <td data-used="false" data-index="9-1" ></td>
-                            <td data-used="false" data-index="9-2" ></td>
-                            <td data-used="false" data-index="9-3" ></td>
-                            <td data-used="false" data-index="9-4" ></td>
-                            <td data-used="false" data-index="9-5" ></td>
-                            <td data-used="false" data-index="9-6" ></td>
-                            <td data-used="false" data-index="9-7" ></td>
-                            <td data-used="false" data-index="9-8" ></td>
-                            <td data-used="false" data-index="9-9" ></td>
+                            <td data-used="false" data-index="9-1"></td>
+                            <td data-used="false" data-index="9-2"></td>
+                            <td data-used="false" data-index="9-3"></td>
+                            <td data-used="false" data-index="9-4"></td>
+                            <td data-used="false" data-index="9-5"></td>
+                            <td data-used="false" data-index="9-6"></td>
+                            <td data-used="false" data-index="9-7"></td>
+                            <td data-used="false" data-index="9-8"></td>
+                            <td data-used="false" data-index="9-9"></td>
                             <td data-used="false" data-index="9-10"></td>
                         </tr>
                         <tr>
                             <td data-used="false" data-index="">J</td>
-                            <td data-used="false" data-index="10-1" ></td>
-                            <td data-used="false" data-index="10-2" ></td>
-                            <td data-used="false" data-index="10-3" ></td>
-                            <td data-used="false" data-index="10-4" ></td>
-                            <td data-used="false" data-index="10-5" ></td>
-                            <td data-used="false" data-index="10-6" ></td>
-                            <td data-used="false" data-index="10-7" ></td>
-                            <td data-used="false" data-index="10-8" ></td>
-                            <td data-used="false" data-index="10-9" ></td>
+                            <td data-used="false" data-index="10-1"></td>
+                            <td data-used="false" data-index="10-2"></td>
+                            <td data-used="false" data-index="10-3"></td>
+                            <td data-used="false" data-index="10-4"></td>
+                            <td data-used="false" data-index="10-5"></td>
+                            <td data-used="false" data-index="10-6"></td>
+                            <td data-used="false" data-index="10-7"></td>
+                            <td data-used="false" data-index="10-8"></td>
+                            <td data-used="false" data-index="10-9"></td>
                             <td data-used="false" data-index="10-10"></td>
                         </tr>
                     </table>
