@@ -118,6 +118,12 @@ let ships = {
 let allShipsAreReady = [];
 
 $(window).ready(function () {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
     $(".orientation").on('click', function () {
         $(".orientation").removeClass('btn-primary');
         $(this).addClass('btn-primary');
@@ -257,7 +263,7 @@ function resetSelectedShip() {
     selected.orientation = orientation;
 }
 
-function setShip() {
+function setShip(formBackend = false) {
     let shipName = selected.id.split('-')[0];
     let shipIndex = parseInt(selected.id.split('-')[1]);
     for (let i = 0; i < prepared.length; i++) {
@@ -270,8 +276,23 @@ function setShip() {
     }
     prepared = [];
     resetSelectedShip();
-    if (isReady()){
-        console.log(allShipsAreReady);
+    if (isReady() && !formBackend){
+        updateShips();
+    }
+}
+
+function setAllShips() {
+    for (const [key, value] of Object.entries(ships)){
+        for (let i = 0; i < value.length; i++){
+            prepared = [];
+            selected.id = key + '-' + i;
+            $('#' + key + '-' + i).attr('data-used', 'true');
+            $('#' + key + '-' + i).addClass('broken');
+            for (let j = 0; j < value[i].length; j++){
+                prepared.push(value[i][j]['index']);
+            }
+            setShip(true);
+        }
     }
 }
 

@@ -26,4 +26,12 @@ Route::middleware('auth')->group(function (){
     Route::get('/play', 'RoomController@create')->name('play');
 
     Route::get('/join/{room}', 'RoomController@join')->name('join');
+
+    Route::get('/room/{room}', 'RoomController@enterTheRoom')->name('enter-the-room');
+
+    Route::get('/get-my-ships/{room}', 'RoomController@getMyShips')->name('get-my-ships');
+
+    Route::put('/update-room-as-owner/{room}', 'RoomController@updateRoomAsOwner')->name('update-room-as-owner');
+
+    Route::put('/update-room-as-opponent/{room}', 'RoomController@updateRoomAsOpponent')->name('update-room-as-opponent');
 });

@@ -229,7 +229,13 @@
                     <hr>
                 </div>
                 <div class="d-flex justify-content-start align-items-center flex-column">
-                    <h4>Opponent</h4>
+                    @if($room->owner->id == auth()->user()->id && $room->opponent)
+                        <h4>{{$room->opponent->name}}</h4>
+                        ({{$room->opponent->email}})
+                    @elseif($room->opponent_id == auth()->user()->id && $room->owner)
+                        <h4>{{$room->owner->name}}</h4>
+                        ({{$room->owner->email}})
+                    @endif
                     <a href="">Add Friend</a>
                     <table id="opponent">
                         <tr>
@@ -380,4 +386,55 @@
             </div>
         </div>
     </main>
+    @if($room->owner_id == auth()->user()->id)
+        <input type="hidden" id="room_update_url" value="{{route('update-room-as-owner', $room)}}">
+    @elseif($room->opponent_id == auth()->user()->id)
+        <input type="hidden" id="room_update_url" value="{{route('update-room-as-opponent', $room)}}">
+    @endif
 @endsection
+@push('js')
+    <script>
+        window.Echo.channel('user.event')
+            .listen('user_event', (e) => {
+                alert(e);
+            });
+        $(window).ready(function () {
+            $.ajax({
+                type: 'GET',
+                url: "{{route('get-my-ships', $room)}}",
+                dataType: 'JSON',
+                success: function (res) {
+                    if (res.ships) {
+                        ships = res.ships;
+                        setAllShips();
+                    }
+                },
+                error: function (error) {
+                    toastr["error"]('Error', 'Oops! Something went wrong', {'progressBar': true});
+                },
+            });
+        });
+
+        function updateShips() {
+            $.ajax({
+                type: 'PUT',
+                url: $('#room_update_url').val(),
+                dataType: 'JSON',
+                data: {
+                    @if(auth()->user()->id == $room->owner->id)
+                    owner_ships: ships,
+                    @elseif(auth()->user()->id == $room->opponent->id)
+                    opponent_ships: ships,
+                    @endif
+                },
+                success: function (res) {
+                    toastr["success"]('Success', 'You are ready', {'progressBar': true});
+                    console.log(res)
+                },
+                error: function (error) {
+                    toastr["error"]('Error', 'Oops! Something went wrong', {'progressBar': true});
+                },
+            });
+        }
+    </script>
+@endpush

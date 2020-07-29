@@ -13,8 +13,15 @@
                             {{ session('status') }}
                         </div>
                     @endif
-
-                    {{ __('You are logged in!') }}
+                    @if($user->ownerRoom)
+                        <a href="{{route('enter-the-room', $user->ownerRoom)}}">
+                            Join to game
+                        </a>
+                    @elseif($user->opponentRoom)
+                        <a href="{{route('enter-the-room', $user->opponentRoom)}}">
+                            Join to game
+                        </a>
+                    @endif
                 </div>
             </div>
         </div>

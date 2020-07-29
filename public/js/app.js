@@ -6159,7 +6159,6 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   key: "71adf3667c21d808b3c9",
   cluster: "ap2"
 });
-bla;
 
 /***/ }),
 
