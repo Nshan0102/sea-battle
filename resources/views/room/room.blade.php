@@ -393,11 +393,17 @@
     @endif
 @endsection
 @push('js')
+    <script src="{{asset('js/events.js')}}"></script>
     <script>
-        window.Echo.channel('user.event')
-            .listen('user_event', (e) => {
-                alert(e);
+        window.Echo.channel('room')
+            .listen('.opponent-joined-{{auth()->id()}}', (e) => {
+                alert(5)
+            }).listen('.opponent-left-{{auth()->id()}}', (e) => {
+                alert(6)
+            }).listen('.room-deleted-{{auth()->id()}}', (e) => {
+                alert(6)
             });
+
         $(window).ready(function () {
             $.ajax({
                 type: 'GET',

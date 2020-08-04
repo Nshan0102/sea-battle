@@ -35,3 +35,5 @@ Route::middleware('auth')->group(function (){
 
     Route::put('/update-room-as-opponent/{room}', 'RoomController@updateRoomAsOpponent')->name('update-room-as-opponent');
 });
+
+

@@ -89,6 +89,14 @@
 <script src="{{ asset('js/app.js') }}"></script>
 <script src="{{asset('assets/js/toastr-init.js')}}"></script>
 <script src="{{asset('assets/js/main.js')}}"></script>
+<script>
+    @if(session('error'))
+        toastr["error"](session('error')['header'], session('error')['message'], {'progressBar': true});
+    @endif
+    @if(session('success'))
+        toastr["success"](session('success')['header'], session('success')['message'], {'progressBar': true});
+    @endif
+</script>
 @stack('js')
 </body>
 </html>

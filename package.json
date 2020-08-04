@@ -24,7 +24,7 @@
     },
     "dependencies": {
         "@popperjs/core": "^2.4.4",
-        "laravel-echo": "^1.8.0",
+        "laravel-echo": "^1.8.1",
         "popper.js": "^1.16.1",
         "pusher-js": "^6.0.3",
         "socket.io-client": "^2.3.0"

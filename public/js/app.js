@@ -305,7 +305,7 @@ var Channel = /*#__PURE__*/function () {
       return this.listen('.Illuminate\\Notifications\\Events\\BroadcastNotificationCreated', callback);
     }
     /**
-     * Stop listening for a whispser event on the channel instance.
+     * Stop listening for a whisper event on the channel instance.
      */
 
   }, {
@@ -424,6 +424,18 @@ var PusherChannel = /*#__PURE__*/function (_Channel) {
     key: "stopListening",
     value: function stopListening(event) {
       this.subscription.unbind(this.eventFormatter.format(event));
+      return this;
+    }
+    /**
+     * Register a callback to be called anytime a subscription error occurs.
+     */
+
+  }, {
+    key: "error",
+    value: function error(callback) {
+      this.on('pusher:subscription_error', function (status) {
+        callback(status);
+      });
       return this;
     }
     /**
@@ -652,6 +664,15 @@ var SocketIoChannel = /*#__PURE__*/function (_Channel) {
       return this;
     }
     /**
+     * Register a callback to be called anytime an error occurs.
+     */
+
+  }, {
+    key: "error",
+    value: function error(callback) {
+      return this;
+    }
+    /**
      * Bind the channel's socket to an event and store the callback.
      */
 
@@ -856,6 +877,15 @@ var NullChannel = /*#__PURE__*/function (_Channel) {
   }, {
     key: "stopListening",
     value: function stopListening(event) {
+      return this;
+    }
+    /**
+     * Register a callback to be called anytime an error occurs.
+     */
+
+  }, {
+    key: "error",
+    value: function error(callback) {
       return this;
     }
     /**
@@ -6157,7 +6187,8 @@ window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/d
 window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   broadcaster: 'pusher',
   key: "71adf3667c21d808b3c9",
-  cluster: "ap2"
+  cluster: "ap2",
+  encrypted: true
 });
 
 /***/ }),

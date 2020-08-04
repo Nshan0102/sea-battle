@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\OpponentJoined;
 use App\Http\Requests\RoomUpdateRequest;
 use App\Room;
 use Carbon\Carbon;
@@ -62,8 +63,12 @@ class RoomController extends Controller
     public function enterTheRoom(Room $room)
     {
         $user = auth()->user();
-        event(new \App\Events\UserEvent("hello"));
         if (($user->opponentRoom && $user->opponentRoom->id === $room->id) || ($user->ownerRoom && $user->ownerRoom->id === $room->id)) {
+            if ($room->owner->id !== $user->id) {
+                event(new OpponentJoined($room->owner, $user));
+            } else {
+                event(new OpponentJoined($room->opponent, $room->owner));
+            }
             return view('room.room')->with([
                 'room' => $room
             ]);
@@ -80,7 +85,12 @@ class RoomController extends Controller
         $user = auth()->user();
         // when room is full
         if (!$room || is_null($room->owner_id) || (!is_null($room->opponent_id) && $room->opponent_id != $user->id)) {
-            return redirect('home');
+            return redirect('home')->with([
+                'error' => [
+                    'header' => 'Oops!',
+                    'message' => 'This room is full!'
+                ]
+            ]);
         }
         // when user has own room
         if ($user->ownerRoom) {
@@ -102,6 +112,7 @@ class RoomController extends Controller
         $room->update([
             'opponent_id' => $user->id
         ]);
+        event(new OpponentJoined($room->owner, $user));
         return view('room.room')->with([
             'room' => $room
         ]);
