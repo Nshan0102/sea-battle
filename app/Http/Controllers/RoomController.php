@@ -137,6 +137,11 @@ class RoomController extends Controller
         ], 200);
     }
 
+    public function updateRoomAsOpponent(RoomUpdateRequest $request, Room $room)
+    {
+
+    }
+
     /**
      * @param Room $room
      * @return JsonResponse

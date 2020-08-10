@@ -230,11 +230,11 @@
                 </div>
                 <div class="d-flex justify-content-start align-items-center flex-column">
                     @if($room->owner->id == auth()->user()->id && $room->opponent)
-                        <h4>{{$room->opponent->name}}</h4>
-                        ({{$room->opponent->email}})
+                        <h4 id="opponent-name">{{$room->opponent->name}}</h4>
+                        <span id="opponent-email">({{$room->opponent->email}})</span>
                     @elseif($room->opponent_id == auth()->user()->id && $room->owner)
-                        <h4>{{$room->owner->name}}</h4>
-                        ({{$room->owner->email}})
+                        <h4 id="opponent-name">{{$room->owner->name}}</h4>
+                        <span id="opponent-email">({{$room->owner->email}})</span>
                     @endif
                     <a href="">Add Friend</a>
                     <table id="opponent">
@@ -397,11 +397,13 @@
     <script>
         window.Echo.channel('room')
             .listen('.opponent-joined-{{auth()->id()}}', (e) => {
-                alert(5)
+                console.log("opponent-joined");
+                $("#opponent-email").html( "( " + e.joinedUser.email + " )" );
+                $("#opponent-name").html( "( " + e.joinedUser.name + " )" );
             }).listen('.opponent-left-{{auth()->id()}}', (e) => {
-                alert(6)
+                console.log("opponent-left");
             }).listen('.room-deleted-{{auth()->id()}}', (e) => {
-                alert(6)
+                console.log("room-deleted");
             });
 
         $(window).ready(function () {

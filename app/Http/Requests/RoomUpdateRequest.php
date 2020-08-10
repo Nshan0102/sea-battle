@@ -25,7 +25,8 @@ class RoomUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'owner_ships' => 'array'
+            'owner_ships' => 'array',
+            'opponent_ships' => 'array'
         ];
     }
 }
