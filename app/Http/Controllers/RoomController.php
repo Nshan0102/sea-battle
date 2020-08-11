@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\GameReady;
 use App\Events\OpponentJoined;
+use App\Events\OpponentReady;
 use App\Http\Requests\RoomUpdateRequest;
 use App\Room;
 use Carbon\Carbon;
@@ -10,6 +12,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
@@ -17,9 +20,10 @@ use Illuminate\View\View;
 class RoomController extends Controller
 {
     /**
+     * @param Request $request
      * @return Application|Factory|View
      */
-    public function create()
+    public function create(Request $request)
     {
         $user = auth()->user();
         if ($user->opponentRoom) {
@@ -27,22 +31,10 @@ class RoomController extends Controller
                 'opponent_id' => NULL
             ]);
         }
-        if ($user->ownerRoom) {
-            $user->ownerRoom->update([
-                'owner_id' => $user->id,
-                'opponent_id' => NULL,
-                'turn' => $user->id,
-                'owner_ships' => NULL,
-                'opponent_ships' => NULL,
-                'owner_fires' => NULL,
-                'opponent_fires' => NULL,
-                'owner_shots' => NULL,
-                'opponent_shots' => NULL,
-                'started_at' => Carbon::now()
-            ]);
-            return view('room.room')->with([
-                'room' => $user->ownerRoom
-            ]);
+        if ($user->ownerRoom && $request->force) {
+            $user->ownerRoom->delete();
+        }elseif ($user->ownerRoom){
+            return redirect(route('enter-the-room', $user->ownerRoom));
         }
         $joinHash = strtolower(Str::random(16));
         $room = Room::create([
@@ -51,9 +43,7 @@ class RoomController extends Controller
             'turn' => $user->id,
             'started_at' => Carbon::now()
         ]);
-        return view('room.room')->with([
-            'room' => $room
-        ]);
+        return redirect(route('enter-the-room', $room));
     }
 
     /**
@@ -67,9 +57,10 @@ class RoomController extends Controller
             if ($room->owner->id !== $user->id) {
                 event(new OpponentJoined($room->owner, $user));
             } else {
-                event(new OpponentJoined($room->opponent, $room->owner));
+                event(new OpponentJoined($user, $room->owner));
             }
             return view('room.room')->with([
+                'authUser' => $user,
                 'room' => $room
             ]);
         }
@@ -114,6 +105,7 @@ class RoomController extends Controller
         ]);
         event(new OpponentJoined($room->owner, $user));
         return view('room.room')->with([
+            'authUser' => $user,
             'room' => $room
         ]);
     }
@@ -126,20 +118,43 @@ class RoomController extends Controller
     public function updateRoomAsOwner(RoomUpdateRequest $request, Room $room)
     {
         $user = auth()->user();
-        if (!$user || $room->owner_id != auth()->user()->id) {
+        if (!$user || $room->owner_id != $user->id || $room->ready) {
             return response()->json([
                 'error' => 'Access denied!'
             ], 403);
         }
         $room->update($request->validated());
+        if ($room->opponent_ships){
+            $room->update(['ready' => true]);
+            event(new GameReady());
+        }
         return response()->json([
             'ships' => $room->owner_ships
         ], 200);
     }
 
+    /**
+     * @param RoomUpdateRequest $request
+     * @param Room $room
+     * @return JsonResponse
+     */
     public function updateRoomAsOpponent(RoomUpdateRequest $request, Room $room)
     {
-
+        $user = auth()->user();
+        if (!$user || $room->opponent_id != $user->id || $room->ready) {
+            return response()->json([
+                'error' => 'Access denied!'
+            ], 403);
+        }
+        $room->update($request->validated());
+        event(new OpponentReady($room->owner, $user));
+        if ($room->owner_ships){
+            $room->update(['ready' => true]);
+            event(new GameReady());
+        }
+        return response()->json([
+            'ships' => $room->opponent_ships
+        ], 200);
     }
 
     /**

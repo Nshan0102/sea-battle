@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
     <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-        <div class="container">
+        <div id="actions-section" class="container">
             <div class="row d-flex justify-content-center mb-2 width-100">
                 <div class="d-flex justify-content-center align-items-center flex-column mb-3 mr-3">
                     <div>
@@ -69,16 +69,16 @@
     <main class="py-4">
         <div class="container">
             <div class="row d-flex justify-content-around align-items-center m-3">
-                @if($room->owner->id == auth()->user()->id)
+                @if($room->owner->id == $authUser->id)
                     <a href="{{route('join', $room)}}">
                         <h5 class="join-link">{{route('join', $room)}}</h5>
                     </a>
                 @endif
             </div>
             <div class="row d-flex justify-content-around align-items-center">
-                <div class="d-flex justify-content-start align-items-center flex-column">
-                    <h4>{{auth()->user()->name}}</h4>
-                    ({{auth()->user()->email}})
+                <div id="auth-section" class="d-flex justify-content-start align-items-center flex-column">
+                    <h4>{{$authUser->name}}</h4>
+                    ({{$authUser->email}})
                     <table id="owner">
                         <tr>
                             <td data-used="false" data-index=""></td>
@@ -228,15 +228,27 @@
                 <div class="d-block d-md-none width-100">
                     <hr>
                 </div>
-                <div class="d-flex justify-content-start align-items-center flex-column">
-                    @if($room->owner->id == auth()->user()->id && $room->opponent)
+                <div id="opponent-section" class="justify-content-start align-items-center flex-column {{$room->owner->id == $authUser->id && !$room->opponent ? 'd-none' : "d-flex"}}"
+                >
+                    @if($room->owner->id == $authUser->id && $room->opponent)
                         <h4 id="opponent-name">{{$room->opponent->name}}</h4>
-                        <span id="opponent-email">({{$room->opponent->email}})</span>
-                    @elseif($room->opponent_id == auth()->user()->id && $room->owner)
+                        <div>
+                            <span id="opponent-email">({{$room->opponent->email}})</span>
+                            <a id="add-friend" href="">Add Friend</a>
+                        </div>
+                    @elseif($room->opponent_id == $authUser->id && $room->owner)
                         <h4 id="opponent-name">{{$room->owner->name}}</h4>
-                        <span id="opponent-email">({{$room->owner->email}})</span>
+                        <div>
+                            <span id="opponent-email">({{$room->owner->email}})</span>
+                            <a id="add-friend" href="">Add Friend</a>
+                        </div>
+                    @else
+                        <h4 id="opponent-name"></h4>
+                        <div>
+                            <span id="opponent-email"></span>
+                            <a id="add-friend" class="d-none" href="">Add Friend</a>
+                        </div>
                     @endif
-                    <a href="">Add Friend</a>
                     <table id="opponent">
                         <tr>
                             <td data-fired="false" data-clean="false" data-opponent=""></td>
@@ -386,9 +398,9 @@
             </div>
         </div>
     </main>
-    @if($room->owner_id == auth()->user()->id)
+    @if($room->owner_id == $authUser->id)
         <input type="hidden" id="room_update_url" value="{{route('update-room-as-owner', $room)}}">
-    @elseif($room->opponent_id == auth()->user()->id)
+    @elseif($room->opponent_id == $authUser->id)
         <input type="hidden" id="room_update_url" value="{{route('update-room-as-opponent', $room)}}">
     @endif
 @endsection
@@ -396,14 +408,31 @@
     <script src="{{asset('js/events.js')}}"></script>
     <script>
         window.Echo.channel('room')
-            .listen('.opponent-joined-{{auth()->id()}}', (e) => {
-                console.log("opponent-joined");
-                $("#opponent-email").html( "( " + e.joinedUser.email + " )" );
-                $("#opponent-name").html( "( " + e.joinedUser.name + " )" );
-            }).listen('.opponent-left-{{auth()->id()}}', (e) => {
-                console.log("opponent-left");
-            }).listen('.room-deleted-{{auth()->id()}}', (e) => {
-                console.log("room-deleted");
+            .listen('.opponent-joined-{{$authUser->id}}', (e) => {
+                let name = e.joinedUser.name ? e.joinedUser.name : "";
+                let email = e.joinedUser.email ? e.joinedUser.email : "";
+                toastr["success"](`Player ${name} has joined!`, 'Hey!', {'progressBar': true});
+                $("#opponent-name").html(name);
+                $("#opponent-email").html(`( ${email} )`);
+                $("#add-friend").removeClass('d-none');
+                $("#opponent-section").removeClass('d-none').addClass('d-flex');
+            }).listen('.opponent-left-{{$authUser->id}}', (e) => {
+                let name = e.userLeft.name ? e.userLeft.name : "";
+                toastr["error"](`Player ${name} has left the room!`, 'Oh no!', {'progressBar': true});
+                $("#opponent-section").removeClass('d-flex').addClass('d-none');
+                $("#opponent-email").html( "" );
+                $("#opponent-name").html( "" );
+                $("#add-friend").addClass('d-none');
+            }).listen('.opponent-ready-{{$authUser->id}}', (e) => {
+                toastr["success"]('Your opponent is ready to play!', 'Yeah', {'progressBar': true});
+            }).listen('.game-ready', (e) => {
+                $('#actions-section').hide();
+                toastr["success"]('You are all done. Lets play', 'Yeah', {'progressBar': true});
+            }).listen('.room-deleted-{{$authUser->id}}', (e) => {
+                toastr["error"]('Owner deleted this room', 'Oops!', {'progressBar': true});
+                setTimeout(function () {
+                    window.location.reload();
+                }, 3000);
             });
 
         $(window).ready(function () {
@@ -429,19 +458,22 @@
                 url: $('#room_update_url').val(),
                 dataType: 'JSON',
                 data: {
-                    @if(auth()->user()->id == $room->owner->id)
+                    @if($authUser->id == $room->owner->id)
                     owner_ships: ships,
-                    @elseif(auth()->user()->id == $room->opponent->id)
+                    @elseif($authUser->id == $room->opponent->id)
                     opponent_ships: ships,
                     @endif
                 },
                 success: function (res) {
                     toastr["success"]('Success', 'You are ready', {'progressBar': true});
-                    console.log(res)
                 },
-                error: function (error) {
-                    toastr["error"]('Error', 'Oops! Something went wrong', {'progressBar': true});
-                },
+                error: function(xhr, status, error) {
+                    let message = 'Oops! Something went wrong';
+                    if(xhr.responseJSON && xhr.responseJSON.error){
+                        message = xhr.responseJSON.error;
+                    }
+                    toastr["error"](message, 'Oops!', {'progressBar': true});
+                }
             });
         }
     </script>

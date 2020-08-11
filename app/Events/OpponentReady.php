@@ -10,23 +10,23 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class OpponentLeft implements ShouldBroadcast
+class OpponentReady implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $user;
-    public $userLeft;
+    public $notifyToUser;
+    public $readyUser;
 
     /**
      * Create a new event instance.
      *
-     * @param $user
-     * @param $userLeft
+     * @param $notifyToUser
+     * @param $readyUser
      */
-    public function __construct($user,$userLeft)
+    public function __construct($notifyToUser, $readyUser)
     {
-        $this->user = $user;
-        $this->userLeft = $userLeft;
+        $this->notifyToUser = $notifyToUser;
+        $this->readyUser = $readyUser;
     }
 
     /**
@@ -41,6 +41,6 @@ class OpponentLeft implements ShouldBroadcast
 
     public function broadcastAs()
     {
-        return 'opponent-left-'.$this->user->id;
+        return 'opponent-ready-'.$this->notifyToUser->id;
     }
 }

@@ -45,14 +45,17 @@ class LoginController extends Controller
         $user = auth()->user();
 
         if ($user->opponentRoom){
-            $room = $user->ownerRoom;
-            event(new OpponentLeft($room->owner));
+            $room = $user->opponentRoom;
+            event(new OpponentLeft($room->owner, $user));
             $room->update([
-                'opponent_id' => NULL
+                'opponent_id' => NULL,
+                'opponent_ships' => NULL,
+                'turn' => $room->owner->id,
+                'ready' => false
             ]);
         }elseif($user->ownerRoom){
             $room = $user->ownerRoom;
-            event(new OpponentLeft($room->opponent));
+            event(new OpponentLeft($room->opponent, $user));
             $room->delete();
         }
 
