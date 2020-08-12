@@ -14,13 +14,15 @@ class GameReady implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    public $room;
+
     /**
      * Create a new event instance.
-     *
+     * @param $room
      */
-    public function __construct()
+    public function __construct($room)
     {
-        //
+        $this->room = $room;
     }
 
     /**
@@ -35,6 +37,6 @@ class GameReady implements ShouldBroadcast
 
     public function broadcastAs()
     {
-        return 'game-ready';
+        return 'game-ready-'.$this->room->id;
     }
 }

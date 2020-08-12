@@ -130,7 +130,9 @@ $(window).ready(function () {
         orientation = $(this).data('orientation');
     });
 
-    $('td[data-index!=""]').on('mouseover', function () {
+    let ownerCells = 'td[data-index!=""]';
+
+    $(ownerCells).on('mouseover', function () {
         prepared = [];
         $("td[data-used='false']").css('background', '#7bc4ff');
         if (selected.count > 0) {
@@ -146,7 +148,7 @@ $(window).ready(function () {
         }
     });
 
-    $('td[data-index!=""]').on('click', function () {
+    $(ownerCells).on('click', function () {
         if (prepared.length > 0) {
             setShip();
         } else {
@@ -160,7 +162,8 @@ $(window).ready(function () {
         let clean = $(this).attr('data-clean');
         if (typeof clean !== typeof undefined && clean !== false && clean !== "true") {
             $(this).attr('data-clean', 'true');
-            alert($(this).attr('data-opponent'));
+            let coordinates = $(this).attr('data-opponent').split('-');
+            fire(coordinates[0],coordinates[1]);
         }
     });
 });
@@ -352,4 +355,30 @@ function isReady() {
         }
     }
     return ready.indexOf('0') === -1;
+}
+
+function fire(x, y) {
+    $.ajax({
+        type: 'POST',
+        url: $('#fire_url').val(),
+        dataType: 'JSON',
+        data: {
+            x_coordinate: x,
+            y_coordinate: y,
+        },
+        success: function (res) {
+            if (res.success && res.success === true) {
+                $("td[data-opponent='" + x + "-" + y + "']").addClass('broken');
+            }else{
+                $("td[data-opponent='" + x + "-" + y + "']").addClass('healthy');
+            }
+        },
+        error: function (xhr, status, error) {
+            let message = 'Oops! Something went wrong';
+            if (xhr.responseJSON && xhr.responseJSON.error) {
+                message = xhr.responseJSON.error;
+            }
+            toastr["error"](message, 'Oops!', {'progressBar': true});
+        }
+    });
 }

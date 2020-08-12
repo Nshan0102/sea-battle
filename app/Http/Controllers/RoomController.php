@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\GameReady;
 use App\Events\OpponentJoined;
 use App\Events\OpponentReady;
+use App\Http\Requests\FireRequest;
 use App\Http\Requests\RoomUpdateRequest;
 use App\Room;
 use Carbon\Carbon;
@@ -33,7 +34,7 @@ class RoomController extends Controller
         }
         if ($user->ownerRoom && $request->force) {
             $user->ownerRoom->delete();
-        }elseif ($user->ownerRoom){
+        } elseif ($user->ownerRoom) {
             return redirect(route('enter-the-room', $user->ownerRoom));
         }
         $joinHash = strtolower(Str::random(16));
@@ -124,9 +125,9 @@ class RoomController extends Controller
             ], 403);
         }
         $room->update($request->validated());
-        if ($room->opponent_ships){
+        if ($room->opponent_ships) {
             $room->update(['ready' => true]);
-            event(new GameReady());
+            event(new GameReady($room));
         }
         return response()->json([
             'ships' => $room->owner_ships
@@ -148,9 +149,9 @@ class RoomController extends Controller
         }
         $room->update($request->validated());
         event(new OpponentReady($room->owner, $user));
-        if ($room->owner_ships){
+        if ($room->owner_ships) {
             $room->update(['ready' => true]);
-            event(new GameReady());
+            event(new GameReady($room));
         }
         return response()->json([
             'ships' => $room->opponent_ships
@@ -172,5 +173,10 @@ class RoomController extends Controller
         return response()->json([
             'ships' => $user->id == $room->owner_id ? json_decode($room->owner_ships) : json_decode($room->opponent_ships)
         ], 200);
+    }
+
+    public function fire(FireRequest $request, Room $room)
+    {
+        dd($request->validated());
     }
 }

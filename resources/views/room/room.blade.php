@@ -68,7 +68,7 @@
     </nav>
     <main class="py-4">
         <div class="container">
-            <div class="row d-flex justify-content-around align-items-center m-3">
+            <div id="join-link-section" class="row d-flex justify-content-around align-items-center m-3">
                 @if($room->owner->id == $authUser->id)
                     <a href="{{route('join', $room)}}">
                         <h5 class="join-link">{{route('join', $room)}}</h5>
@@ -228,7 +228,8 @@
                 <div class="d-block d-md-none width-100">
                     <hr>
                 </div>
-                <div id="opponent-section" class="justify-content-start align-items-center flex-column {{$room->owner->id == $authUser->id && !$room->opponent ? 'd-none' : "d-flex"}}"
+                <div id="opponent-section"
+                     class="justify-content-start align-items-center flex-column {{$room->owner->id == $authUser->id && !$room->opponent ? 'd-none' : "d-flex"}}"
                 >
                     @if($room->owner->id == $authUser->id && $room->opponent)
                         <h4 id="opponent-name">{{$room->opponent->name}}</h4>
@@ -403,6 +404,7 @@
     @elseif($room->opponent_id == $authUser->id)
         <input type="hidden" id="room_update_url" value="{{route('update-room-as-opponent', $room)}}">
     @endif
+    <input type="hidden" id="fire_url" value="{{route('fire', $room)}}">
 @endsection
 @push('js')
     <script src="{{asset('js/events.js')}}"></script>
@@ -417,23 +419,26 @@
                 $("#add-friend").removeClass('d-none');
                 $("#opponent-section").removeClass('d-none').addClass('d-flex');
             }).listen('.opponent-left-{{$authUser->id}}', (e) => {
-                let name = e.userLeft.name ? e.userLeft.name : "";
-                toastr["error"](`Player ${name} has left the room!`, 'Oh no!', {'progressBar': true});
-                $("#opponent-section").removeClass('d-flex').addClass('d-none');
-                $("#opponent-email").html( "" );
-                $("#opponent-name").html( "" );
-                $("#add-friend").addClass('d-none');
-            }).listen('.opponent-ready-{{$authUser->id}}', (e) => {
-                toastr["success"]('Your opponent is ready to play!', 'Yeah', {'progressBar': true});
-            }).listen('.game-ready', (e) => {
-                $('#actions-section').hide();
-                toastr["success"]('You are all done. Lets play', 'Yeah', {'progressBar': true});
-            }).listen('.room-deleted-{{$authUser->id}}', (e) => {
-                toastr["error"]('Owner deleted this room', 'Oops!', {'progressBar': true});
-                setTimeout(function () {
-                    window.location.reload();
-                }, 3000);
-            });
+            let name = e.userLeft.name ? e.userLeft.name : "";
+            toastr["error"](`Player ${name} has left the room!`, 'Oh no!', {'progressBar': true});
+            $("#opponent-section").removeClass('d-flex').addClass('d-none');
+            $("#opponent-email").html("");
+            $("#opponent-name").html("");
+            $("#add-friend").addClass('d-none');
+        }).listen('.opponent-ready-{{$authUser->id}}', (e) => {
+            toastr["success"]('Your opponent is ready to play!', 'Yeah', {'progressBar': true});
+        }).listen('.game-ready-{{$room->id}}', (e) => {
+            $('#actions-section').hide();
+            $('#join-link-section').removeClass('d-flex').addClass('d-none');
+            toastr["success"]('You are all done. Lets play', 'Yeah', {'progressBar': true});
+        }).listen('.room-deleted-{{$authUser->id}}', (e) => {
+            toastr["error"]('Owner deleted this room', 'Oops!', {'progressBar': true});
+            setTimeout(function () {
+                window.location.reload();
+            }, 3000);
+        }).listen('.fire-{{$authUser->id}}', (e) => {
+            console.log(e);
+        });
 
         $(window).ready(function () {
             $.ajax({
@@ -467,9 +472,9 @@
                 success: function (res) {
                     toastr["success"]('Success', 'You are ready', {'progressBar': true});
                 },
-                error: function(xhr, status, error) {
+                error: function (xhr, status, error) {
                     let message = 'Oops! Something went wrong';
-                    if(xhr.responseJSON && xhr.responseJSON.error){
+                    if (xhr.responseJSON && xhr.responseJSON.error) {
                         message = xhr.responseJSON.error;
                     }
                     toastr["error"](message, 'Oops!', {'progressBar': true});
