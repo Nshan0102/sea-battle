@@ -44,16 +44,16 @@ class LoginController extends Controller
     {
         $user = auth()->user();
 
-        if ($user->opponentRoom){
+        if ($user->opponentRoom) {
             $room = $user->opponentRoom;
             event(new OpponentLeft($room->owner, $user));
             $room->update([
-                'opponent_id' => NULL,
-                'opponent_ships' => NULL,
+                'opponent_id' => null,
+                'opponent_ships' => null,
                 'turn' => $room->owner->id,
-                'ready' => false
+//                'ready' => false
             ]);
-        }elseif($user->ownerRoom){
+        } elseif ($user->ownerRoom) {
             $room = $user->ownerRoom;
             event(new OpponentLeft($room->opponent, $user));
             $room->delete();
@@ -64,8 +64,6 @@ class LoginController extends Controller
         $request->session()->flush();
 
         $request->session()->regenerate();
-
-
 
         return redirect('/login');
     }

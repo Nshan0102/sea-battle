@@ -70,7 +70,7 @@
         <div class="container">
             <div id="join-link-section" class="row d-flex justify-content-around align-items-center m-3">
                 @if($room->owner->id == $authUser->id)
-                    <a href="{{route('join', $room)}}">
+                    <a href="{{route('join', $room)}}" onclick="copyLink(event, this)">
                         <h5 class="join-link">{{route('join', $room)}}</h5>
                     </a>
                 @endif
@@ -480,6 +480,16 @@
                     toastr["error"](message, 'Oops!', {'progressBar': true});
                 }
             });
+        }
+
+        function copyLink(ev, anchor) {
+            ev.preventDefault();
+            let $temp = $("<input>");
+            $("body").append($temp);
+            $temp.val($(anchor).attr('href')).select();
+            document.execCommand("copy");
+            $temp.remove();
+            toastr["success"](`Yep!`, 'Link was copied', {'progressBar': true});
         }
     </script>
 @endpush

@@ -24,8 +24,8 @@ class FireRequest extends FormRequest
     public function rules()
     {
         return [
-            'x' => 'required|integer|min:1|max:10',
-            'y' => 'required|integer|min:1|max:10'
+            'x_coordinate' => 'required|integer|min:1|max:10',
+            'y_coordinate' => 'required|integer|min:1|max:10'
         ];
     }
 }
