@@ -116,6 +116,7 @@ let ships = {
     ]
 };
 let allShipsAreReady = [];
+let gameStarted = false;
 
 $(window).ready(function () {
     $.ajaxSetup({
@@ -137,7 +138,7 @@ $(window).ready(function () {
         $("td[data-used='false']").css('background', '#7bc4ff');
         if (selected.count > 0) {
             let index = $(this).data('index');
-            if(index != undefined) {
+            if (index != undefined) {
                 let row = index.split("-")[0];
                 let column = index.split("-")[1];
                 let goesOutside = checkIfGoesOutside(parseInt(row), parseInt(column));
@@ -152,7 +153,7 @@ $(window).ready(function () {
         if (prepared.length > 0) {
             setShip();
         } else {
-            if ($(this).attr('data-used') === 'true'){
+            if ($(this).attr('data-used') === 'true' && !gameStarted) {
                 resetShip($(this).data('ship'));
             }
         }
@@ -161,9 +162,8 @@ $(window).ready(function () {
     $('td[data-opponent!=""]').on('click', function () {
         let clean = $(this).attr('data-clean');
         if (typeof clean !== typeof undefined && clean !== false && clean !== "true") {
-            $(this).attr('data-clean', 'true');
             let coordinates = $(this).attr('data-opponent').split('-');
-            fire(coordinates[0],coordinates[1]);
+            fire(coordinates[0], coordinates[1]);
         }
     });
 });
@@ -279,19 +279,19 @@ function setShip(formBackend = false) {
     }
     prepared = [];
     resetSelectedShip();
-    if (isReady() && !formBackend){
+    if (isReady() && !formBackend) {
         updateShips();
     }
 }
 
 function setAllShips() {
-    for (const [key, value] of Object.entries(ships)){
-        for (let i = 0; i < value.length; i++){
+    for (const [key, value] of Object.entries(ships)) {
+        for (let i = 0; i < value.length; i++) {
             prepared = [];
             selected.id = key + '-' + i;
             $('#' + key + '-' + i).attr('data-used', 'true');
             $('#' + key + '-' + i).addClass('broken');
-            for (let j = 0; j < value[i].length; j++){
+            for (let j = 0; j < value[i].length; j++) {
                 prepared.push(value[i][j]['index']);
             }
             setShip(true);
@@ -300,7 +300,7 @@ function setAllShips() {
 }
 
 function resetShip(ship) {
-    if (ship) {
+    if (ship && gameStarted === false) {
         let shipName = ship.split('-')[0];
         let shipIndex = parseInt(ship.split('-')[1]);
         for (let i = 0; i < ships[shipName][shipIndex].length; i++) {
@@ -316,7 +316,7 @@ function resetShip(ship) {
     }
 }
 
-function toggleNeighbours(index,block) {
+function toggleNeighbours(index, block) {
     let row = index.split('-')[0];
     let col = index.split('-')[1];
     let indexes = [
@@ -330,9 +330,9 @@ function toggleNeighbours(index,block) {
         (parseInt(row) + 1) + '-' + parseInt(col),
         (parseInt(row) + 1) + '-' + (parseInt(col) + 1),
     ];
-    for (let i = 0; i < indexes.length; i++){
-        if (indexes[i].split('-')[0] > 0 && indexes[i].split('-')[0] < 11){
-            if (indexes[i].split('-')[1] > 0 && indexes[i].split('-')[1] < 11){
+    for (let i = 0; i < indexes.length; i++) {
+        if (indexes[i].split('-')[0] > 0 && indexes[i].split('-')[0] < 11) {
+            if (indexes[i].split('-')[1] > 0 && indexes[i].split('-')[1] < 11) {
                 $('td[data-index="' + indexes[i] + '"]').attr('data-used', block);
             }
         }
@@ -342,13 +342,13 @@ function toggleNeighbours(index,block) {
 function isReady() {
     let ready = '';
     allShipsAreReady = [];
-    for (const [key, value] of Object.entries(ships)){
-        for (let i = 0; i < value.length; i++){
-            for (let j = 0; j < value[i].length; j++){
-                if (value[i][j]['index'] !== ""){
+    for (const [key, value] of Object.entries(ships)) {
+        for (let i = 0; i < value.length; i++) {
+            for (let j = 0; j < value[i].length; j++) {
+                if (value[i][j]['index'] !== "") {
                     ready += "1";
                     allShipsAreReady.push(value[i][j]['index']);
-                }else{
+                } else {
                     ready += "0";
                 }
             }
@@ -367,11 +367,14 @@ function fire(x, y) {
             y_coordinate: y,
         },
         success: function (res) {
-            if (res.success && res.success === true) {
+            if (res.status === 'success') {
                 $("td[data-opponent='" + x + "-" + y + "']").addClass('broken');
-            }else{
+                $(this).attr('data-clean', 'true');
+            } else if (res.status === 'empty') {
                 $("td[data-opponent='" + x + "-" + y + "']").addClass('healthy');
+                $(this).attr('data-clean', 'true');
             }
+            toastr["info"](res.message, '', {'progressBar': true});
         },
         error: function (xhr, status, error) {
             let message = 'Oops! Something went wrong';
@@ -381,4 +384,33 @@ function fire(x, y) {
             toastr["error"](message, 'Oops!', {'progressBar': true});
         }
     });
+}
+
+function getIndexName(index) {
+    let letters = ['', 'A', 'B', 'C', 'D', 'E', 'G', 'H', 'I', 'J'];
+    let indexNumber = parseInt(index.split('-')[0]);
+    let letter = letters[indexNumber];
+    return letter + '-' + index.split('-')[1];
+}
+
+function makeBrokenOnMyBoard(index) {
+    let cell = $("td[data-index='" + index + "']")[0];
+    let attr = $(cell).attr('data-ship');
+    let isUsed = typeof attr !== typeof undefined && attr !== false;
+    if (isUsed === true){
+        $("td[data-index='" + index + "']").addClass('broken');
+    }else {
+        $("td[data-index='" + index + "']").addClass('healthy');
+    }
+}
+
+function showFires(fires, succeeds, board) {
+    for (let i = 0; i < fires.length; i++) {
+        let cell = $("td[data-" + board + "='" + fires[i] + "']")[0];
+        if (succeeds.indexOf(fires[i]) >= 0){
+            $(cell).addClass('broken');
+        }else{
+            $(cell).addClass('healthy');
+        }
+    }
 }

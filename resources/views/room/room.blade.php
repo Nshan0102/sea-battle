@@ -2,68 +2,70 @@
 @section('content')
     <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
         <div id="actions-section" class="container">
-            <div class="row d-flex justify-content-center mb-2 width-100">
-                <div class="d-flex justify-content-center align-items-center flex-column mb-3 mr-3">
-                    <div>
-                        <button title="Set ship direction from LEFT to RIGHT" data-used="false"
-                                class="orientation btn btn-primary" data-orientation="right">
-                            <i class="fas fa-arrow-right" style="color: black"></i>
+            @if(!$room->ready)
+                <div class="row d-flex justify-content-center mb-2 width-100">
+                    <div class="d-flex justify-content-center align-items-center flex-column mb-3 mr-3">
+                        <div>
+                            <button title="Set ship direction from LEFT to RIGHT" data-used="false"
+                                    class="orientation btn btn-primary" data-orientation="right">
+                                <i class="fas fa-arrow-right" style="color: black"></i>
+                            </button>
+                            <button title="Set ship direction from UP to DOWN" data-used="false"
+                                    class="orientation btn btn-outline-primary mr-2" data-orientation="down">
+                                <i class="fas fa-arrow-down" style="color: black"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mb-3 mr-3">
+                        <button class="btn btn-success" data-used="false" onclick="choose(1, 'one-0')" id="one-0">
+                            <i class="fas fa-ship"></i>
                         </button>
-                        <button title="Set ship direction from UP to DOWN" data-used="false"
-                                class="orientation btn btn-outline-primary mr-2" data-orientation="down">
-                            <i class="fas fa-arrow-down" style="color: black"></i>
+                        <button class="btn btn-success" data-used="false" onclick="choose(1, 'one-1')" id="one-1">
+                            <i class="fas fa-ship"></i>
+                        </button>
+                        <button class="btn btn-success" data-used="false" onclick="choose(1, 'one-2')" id="one-2">
+                            <i class="fas fa-ship"></i>
+                        </button>
+                        <button class="btn btn-success" data-used="false" onclick="choose(1, 'one-3')" id="one-3">
+                            <i class="fas fa-ship"></i>
+                        </button>
+                    </div>
+                    <div class="mb-3 mr-3">
+                        <button class="btn btn-success" data-used="false" onclick="choose(2, 'two-0')" id="two-0">
+                            <i class="fas fa-ship"></i>
+                            <i class="fas fa-ship"></i>
+                        </button>
+                        <button class="btn btn-success" data-used="false" onclick="choose(2, 'two-1')" id="two-1">
+                            <i class="fas fa-ship"></i>
+                            <i class="fas fa-ship"></i>
+                        </button>
+                        <button class="btn btn-success" data-used="false" onclick="choose(2, 'two-2')" id="two-2">
+                            <i class="fas fa-ship"></i>
+                            <i class="fas fa-ship"></i>
+                        </button>
+                    </div>
+                    <div class="mb-3 mr-3">
+                        <button class="btn btn-success" data-used="false" onclick="choose(3, 'three-0')" id="three-0">
+                            <i class="fas fa-ship"></i>
+                            <i class="fas fa-ship"></i>
+                            <i class="fas fa-ship"></i>
+                        </button>
+                        <button class="btn btn-success" data-used="false" onclick="choose(3, 'three-1')" id="three-1">
+                            <i class="fas fa-ship"></i>
+                            <i class="fas fa-ship"></i>
+                            <i class="fas fa-ship"></i>
+                        </button>
+                    </div>
+                    <div class="mb-3 mr-3">
+                        <button class="btn btn-success" data-used="false" onclick="choose(4, 'four-0')" id="four-0">
+                            <i class="fas fa-ship"></i>
+                            <i class="fas fa-ship"></i>
+                            <i class="fas fa-ship"></i>
+                            <i class="fas fa-ship"></i>
                         </button>
                     </div>
                 </div>
-                <div class="mb-3 mr-3">
-                    <button class="btn btn-success" data-used="false" onclick="choose(1, 'one-0')" id="one-0">
-                        <i class="fas fa-ship"></i>
-                    </button>
-                    <button class="btn btn-success" data-used="false" onclick="choose(1, 'one-1')" id="one-1">
-                        <i class="fas fa-ship"></i>
-                    </button>
-                    <button class="btn btn-success" data-used="false" onclick="choose(1, 'one-2')" id="one-2">
-                        <i class="fas fa-ship"></i>
-                    </button>
-                    <button class="btn btn-success" data-used="false" onclick="choose(1, 'one-3')" id="one-3">
-                        <i class="fas fa-ship"></i>
-                    </button>
-                </div>
-                <div class="mb-3 mr-3">
-                    <button class="btn btn-success" data-used="false" onclick="choose(2, 'two-0')" id="two-0">
-                        <i class="fas fa-ship"></i>
-                        <i class="fas fa-ship"></i>
-                    </button>
-                    <button class="btn btn-success" data-used="false" onclick="choose(2, 'two-1')" id="two-1">
-                        <i class="fas fa-ship"></i>
-                        <i class="fas fa-ship"></i>
-                    </button>
-                    <button class="btn btn-success" data-used="false" onclick="choose(2, 'two-2')" id="two-2">
-                        <i class="fas fa-ship"></i>
-                        <i class="fas fa-ship"></i>
-                    </button>
-                </div>
-                <div class="mb-3 mr-3">
-                    <button class="btn btn-success" data-used="false" onclick="choose(3, 'three-0')" id="three-0">
-                        <i class="fas fa-ship"></i>
-                        <i class="fas fa-ship"></i>
-                        <i class="fas fa-ship"></i>
-                    </button>
-                    <button class="btn btn-success" data-used="false" onclick="choose(3, 'three-1')" id="three-1">
-                        <i class="fas fa-ship"></i>
-                        <i class="fas fa-ship"></i>
-                        <i class="fas fa-ship"></i>
-                    </button>
-                </div>
-                <div class="mb-3 mr-3">
-                    <button class="btn btn-success" data-used="false" onclick="choose(4, 'four-0')" id="four-0">
-                        <i class="fas fa-ship"></i>
-                        <i class="fas fa-ship"></i>
-                        <i class="fas fa-ship"></i>
-                        <i class="fas fa-ship"></i>
-                    </button>
-                </div>
-            </div>
+            @endif
         </div>
     </nav>
     <main class="py-4">
@@ -235,17 +237,17 @@
                         <h4 id="opponent-name">{{$room->opponent->name}}</h4>
                         <div>
                             <span id="opponent-email">({{$room->opponent->email}})</span>
-                            <a id="add-friend" href="">Add Friend</a>
+                            <a id="add-friend" class="d-none" href="">Add Friend</a>
                         </div>
                     @elseif($room->opponent_id == $authUser->id && $room->owner)
                         <h4 id="opponent-name">{{$room->owner->name}}</h4>
                         <div>
                             <span id="opponent-email">({{$room->owner->email}})</span>
-                            <a id="add-friend" href="">Add Friend</a>
+                            <a id="add-friend" class="d-none" href="">Add Friend</a>
                         </div>
                     @else
                         <h4 id="opponent-name"></h4>
-                        <div>
+                        <div class="d-none">
                             <span id="opponent-email"></span>
                             <a id="add-friend" class="d-none" href="">Add Friend</a>
                         </div>
@@ -437,8 +439,18 @@
                 window.location.reload();
             }, 3000);
         }).listen('.fire-{{$authUser->id}}', (e) => {
-            console.log(e);
+            makeBrokenOnMyBoard(e.index);
+            toastr["info"]('Opponent shot', "Cell " + getIndexName(e.index), {'progressBar': true});
         });
+
+        let myFires = {!! auth()->id() == $room->owner_id ? $room->owner_fires : $room->opponent_fires !!};
+        let opponentFires = {!! auth()->id() != $room->owner_id ? $room->owner_fires : $room->opponent_fires !!};
+        let mySucceeds = {!! auth()->id() == $room->owner_id ? $room->owner_succeeds : $room->opponent_succeeds !!};
+        let opponentSucceeds = {!! auth()->id() != $room->owner_id ? $room->owner_succeeds : $room->opponent_succeeds !!};
+
+        @if($room->ready)
+            gameStarted = true;
+        @endif
 
         $(window).ready(function () {
             $.ajax({
@@ -455,6 +467,8 @@
                     toastr["error"]('Error', 'Oops! Something went wrong', {'progressBar': true});
                 },
             });
+            showFires(myFires, mySucceeds, 'opponent');
+            showFires(opponentFires, opponentSucceeds, 'index');
         });
 
         function updateShips() {

@@ -23,9 +23,12 @@ class CreateRoomsTable extends Migration
             $table->json('opponent_ships')->nullable()->comment('Coordinates of the ships of opponent');
             $table->json('owner_fires')->nullable()->comment('Coordinates where the owner shot');
             $table->json('opponent_fires')->nullable()->comment('Coordinates where the opponent shot');
-            $table->integer('owner_shots')->nullable()->comment('How many times did the owner hit the opponent ships');
-            $table->integer('opponent_shots')->nullable()->comment('How many times did the opponent hit the owner ships');
+            $table->json('owner_succeeds')->nullable()->comment('Coordinates where the owner shot and succeed');
+            $table->json('opponent_succeeds')->nullable()->comment('Coordinates where the opponent shot and succeed');
+            $table->integer('owner_shots')->default(0)->comment('How many times did the owner hit the opponent ships');
+            $table->integer('opponent_shots')->default(0)->comment('How many times did the opponent hit the owner ships');
             $table->timestamp('started_at', 0)->nullable()->comment('When does the owner clicked play');
+            $table->boolean('ready')->default(0);
             $table->timestamps();
         });
     }

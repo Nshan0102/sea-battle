@@ -14,23 +14,33 @@ class Fire implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    public $notifyToUser;
+    public $index;
+
     /**
      * Create a new event instance.
      *
-     * @return void
+     * @param $notifyToUser
+     * @param $index
      */
-    public function __construct()
+    public function __construct($notifyToUser, $index)
     {
-        //
+        $this->notifyToUser = $notifyToUser;
+        $this->index = $index;
     }
 
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return \Illuminate\Broadcasting\Channel|array
+     * @return Channel|array
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('channel-name');
+        return new Channel('room');
+    }
+
+    public function broadcastAs()
+    {
+        return 'fire-'.$this->notifyToUser->id;
     }
 }

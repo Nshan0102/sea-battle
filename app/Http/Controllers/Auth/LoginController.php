@@ -51,7 +51,7 @@ class LoginController extends Controller
                 'opponent_id' => null,
                 'opponent_ships' => null,
                 'turn' => $room->owner->id,
-//                'ready' => false
+                'ready' => false
             ]);
         } elseif ($user->ownerRoom) {
             $room = $user->ownerRoom;

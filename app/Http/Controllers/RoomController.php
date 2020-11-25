@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\Fire;
 use App\Events\GameReady;
 use App\Events\OpponentJoined;
 use App\Events\OpponentReady;
 use App\Http\Requests\FireRequest;
 use App\Http\Requests\RoomUpdateRequest;
 use App\Room;
+use App\Traits\RoomTrait;
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -20,6 +23,8 @@ use Illuminate\View\View;
 
 class RoomController extends Controller
 {
+    use RoomTrait;
+
     /**
      * @param Request $request
      * @return Application|Factory|View
@@ -29,7 +34,7 @@ class RoomController extends Controller
         $user = auth()->user();
         if ($user->opponentRoom) {
             $user->opponentRoom->update([
-                'opponent_id' => NULL
+                'opponent_id' => null
             ]);
         }
         if ($user->ownerRoom && $request->force) {
@@ -37,9 +42,12 @@ class RoomController extends Controller
         } elseif ($user->ownerRoom) {
             return redirect(route('enter-the-room', $user->ownerRoom));
         }
-        $joinHash = strtolower(Str::random(16));
         $room = Room::create([
-            'join_hash' => $joinHash,
+            'opponent_fires' => '[]',
+            'owner_fires' => '[]',
+            'opponent_succeeds' => '[]',
+            'owner_succeeds' => '[]',
+            'join_hash' => strtolower(Str::random(16)),
             'owner_id' => $user->id,
             'turn' => $user->id,
             'started_at' => Carbon::now()
@@ -97,7 +105,7 @@ class RoomController extends Controller
         // when user was opponent in other room
         if ($user->opponentRoom && $user->opponentRoom->id !== $room->id) {
             $user->opponentRoom->update([
-                'opponent_id' => NULL
+                'opponent_id' => null
             ]);
         }
         // set user as opponent for this room
@@ -177,6 +185,58 @@ class RoomController extends Controller
 
     public function fire(FireRequest $request, Room $room)
     {
-        dd($request->validated());
+        $index = $request->x_coordinate . '-' . $request->y_coordinate;
+        $userIsOwner = auth()->user()->id === $room->owner_id;
+        if ($room->turn !== auth()->user()->id) {
+            return response()->json([
+                'error' => 'Not your turn!'
+            ], 403);
+        }
+        $notifyTo = $userIsOwner ? User::find($room->opponent_id) : User::find($room->owner_id);
+        $opponentShips = $userIsOwner ? json_decode($room->opponent_ships) : json_decode($room->owner_ships);
+        $fires = $userIsOwner ? json_decode($room->owner_fires) : json_decode($room->opponent_fires);
+        $shots = $userIsOwner ? $room->opponent_shots : $room->owner_shots;
+        $succeeds = $userIsOwner ? json_decode($room->owner_succeeds) : json_decode($room->opponent_succeeds);
+        if (in_array($index, $fires)){
+            return response()->json([
+                'index' => $index,
+                'status' => 'fail',
+                'message' => 'This cell was already fired'
+            ]);
+        }
+        $shot = $this->shoot($opponentShips, $index);
+        is_array($fires) ? array_push($fires, $index) : $fires = [$index];
+        if ($shot['status'] == 'success') {
+            array_push($succeeds, $index);
+            event(new Fire($notifyTo, $index));
+            is_numeric($shots) ? $shots += 1  : $shots = 1;
+        }elseif ($shot['status'] == 'empty'){
+            event(new Fire($notifyTo, $index));
+            $room->update([
+                'turn' => $userIsOwner ? $room->opponent_id : $room->owner_id
+            ]);
+        }
+
+        if ($userIsOwner) {
+            $room->update([
+                'opponent_ships' => json_encode($shot['ships']),
+                'owner_fires' => $fires,
+                'owner_shots' => $shots,
+                'owner_succeeds' => $succeeds
+            ]);
+        } else {
+            $room->update([
+                'owner_ships' => json_encode($shot['ships']),
+                'opponent_fires' => $fires,
+                'opponent_shots' => $shots,
+                'opponent_succeeds' => $succeeds
+            ]);
+        }
+
+        return response()->json([
+            'index' => $index,
+            'status' => $shot['status'],
+            'message' => $shot['message']
+        ]);
     }
 }
