@@ -209,6 +209,10 @@ class RoomController extends Controller
         if ($shot['status'] == 'success') {
             array_push($succeeds, $index);
             event(new Fire($notifyTo, $index));
+            if (count($succeeds) === 20){
+                event(new Fire($notifyTo, 'win'));
+                event(new Fire(auth()->user(), 'winner'));
+            }
             is_numeric($shots) ? $shots += 1  : $shots = 1;
         }elseif ($shot['status'] == 'empty'){
             event(new Fire($notifyTo, $index));
