@@ -442,6 +442,7 @@
             if(e.index === 'win' || e.index === 'winner'){
                 let msg = e.index === 'win' ? 'Sorry, you loose' : "Congratulations, You won!";
                 toastr["success"]('Hey', msg, {'progressBar': true});
+                alert(msg);
             }else {
                 makeBrokenOnMyBoard(e.index);
                 toastr["info"]('Opponent shot', "Cell " + getIndexName(e.index), {'progressBar': true});
