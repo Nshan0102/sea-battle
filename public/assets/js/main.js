@@ -263,15 +263,23 @@ function choose(cellsNumber, id) {
 }
 
 function setSelectedShip(cellsNumber, id) {
-    selected.id = id;
-    selected.count = cellsNumber;
-    selected.orientation = orientation;
+    if (gameStarted === false && setAndResetLoading === false) {
+        setAndResetLoading = true;
+        selected.id = id;
+        selected.count = cellsNumber;
+        selected.orientation = orientation;
+    }
+    setAndResetLoading = false;
 }
 
 function resetSelectedShip() {
-    selected.id = "";
-    selected.count = 0;
-    selected.orientation = orientation;
+    if (gameStarted === false && setAndResetLoading === false) {
+        setAndResetLoading = true;
+        selected.id = "";
+        selected.count = 0;
+        selected.orientation = orientation;
+    }
+    setAndResetLoading = false;
 }
 
 function setShip(formBackend = false) {
@@ -309,7 +317,7 @@ function setAllShips() {
 
 function resetShip(ship) {
     if (ship && gameStarted === false && setAndResetLoading === false) {
-        setAndResetLoading = true
+        setAndResetLoading = true;
         let shipName = ship.split('-')[0];
         let shipIndex = parseInt(ship.split('-')[1]);
         for (let i = 0; i < ships[shipName][shipIndex].length; i++) {
@@ -320,10 +328,10 @@ function resetShip(ship) {
             $('td[data-index="' + ships[shipName][shipIndex][i]['index'] + '"]').removeAttr('data-ship');
             ships[shipName][shipIndex][i]['index'] = "";
         }
-        setAndResetLoading = false;
         $("#" + ship).removeClass('broken');
         $("#" + ship).attr('data-used', 'false');
     }
+    setAndResetLoading = false;
 }
 
 function toggleNeighbours(index, block) {
