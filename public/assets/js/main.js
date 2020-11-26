@@ -117,7 +117,6 @@ let ships = {
 };
 let allShipsAreReady = [];
 let gameStarted = false;
-let myTurn = false;
 
 $(window).ready(function () {
     $.ajaxSetup({
@@ -169,8 +168,11 @@ $(window).ready(function () {
     });
 
     $('td[data-opponent!=""]').contextmenu(function (event) {
-        event.preventDefault();
-        $(this).toggleClass('healthyChecked');
+        let opponent = $(this).attr('data-opponent');
+        if (typeof opponent !== typeof undefined && opponent !== false && opponent !== "") {
+            event.preventDefault();
+            $(this).toggleClass('healthyChecked');
+        }
     });
 });
 
@@ -364,37 +366,41 @@ function isReady() {
 }
 
 function fire(x, y) {
-    $.ajax({
-        type: 'POST',
-        url: $('#fire_url').val(),
-        dataType: 'JSON',
-        data: {
-            x_coordinate: x,
-            y_coordinate: y,
-        },
-        success: function (res) {
-            if (res.status === 'success') {
-                $("td[data-opponent='" + x + "-" + y + "']").addClass('wounded');
-                $(this).attr('data-clean', 'true');
-                if (res.ship.length > 0) {
-                    for (let i = 0; i < res.ship.length; i++) {
-                        $("td[data-opponent='" + res.ship[i]['index'] + "']").removeClass('wounded').addClass('broken');
+    if (gameStarted){
+        $.ajax({
+            type: 'POST',
+            url: $('#fire_url').val(),
+            dataType: 'JSON',
+            data: {
+                x_coordinate: x,
+                y_coordinate: y,
+            },
+            success: function (res) {
+                if (res.status === 'success') {
+                    $("td[data-opponent='" + x + "-" + y + "']").addClass('wounded');
+                    $(this).attr('data-clean', 'true');
+                    if (res.ship.length > 0) {
+                        for (let i = 0; i < res.ship.length; i++) {
+                            $("td[data-opponent='" + res.ship[i]['index'] + "']").removeClass('wounded').addClass('broken');
+                        }
                     }
+                } else if (res.status === 'empty') {
+                    $("td[data-opponent='" + x + "-" + y + "']").addClass('healthy');
+                    $(this).attr('data-clean', 'true');
                 }
-            } else if (res.status === 'empty') {
-                $("td[data-opponent='" + x + "-" + y + "']").addClass('healthy');
-                $(this).attr('data-clean', 'true');
+                toastr["info"](res.message, '', {'progressBar': true});
+            },
+            error: function (xhr, status, error) {
+                let message = 'Oops! Something went wrong';
+                if (xhr.responseJSON && xhr.responseJSON.error) {
+                    message = xhr.responseJSON.error;
+                }
+                toastr["error"](message, 'Oops!', {'progressBar': true});
             }
-            toastr["info"](res.message, '', {'progressBar': true});
-        },
-        error: function (xhr, status, error) {
-            let message = 'Oops! Something went wrong';
-            if (xhr.responseJSON && xhr.responseJSON.error) {
-                message = xhr.responseJSON.error;
-            }
-            toastr["error"](message, 'Oops!', {'progressBar': true});
-        }
-    });
+        });
+    }else{
+        toastr["info"]("You and/or your opponent are not ready to play", 'Hey!', {'progressBar': true});
+    }
 }
 
 function getIndexName(index) {

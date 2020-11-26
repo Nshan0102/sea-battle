@@ -433,6 +433,7 @@
         }).listen('.game-ready-{{$room->id}}', (e) => {
             $('#actions-section').hide();
             $('#join-link-section').removeClass('d-flex').addClass('d-none');
+            gameStarted = true;
             toastr["success"]('You are all done. Lets play', 'Yeah', {'progressBar': true});
         }).listen('.room-deleted-{{$authUser->id}}', (e) => {
             toastr["error"]('Owner deleted this room', 'Oops!', {'progressBar': true});
