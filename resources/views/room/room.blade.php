@@ -72,7 +72,8 @@
         <div class="container">
             <div id="join-link-section" class="row d-flex justify-content-around align-items-center m-3">
                 @if($room->owner->id == $authUser->id)
-                    <a href="{{route('join', $room)}}" onclick="copyLink(event, this)">
+                    <a title="Send this link to your friend (click to copy)"
+                       href="{{route('join', $room)}}" onclick="copyLink(event, this)">
                         <h5 class="join-link">{{route('join', $room)}}</h5>
                     </a>
                 @endif
