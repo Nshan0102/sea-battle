@@ -242,11 +242,12 @@ function choose(cellsNumber, id) {
     if (dif > 1) {
         chooseTime = new Date().getTime() / 1000;
         let alreadyUsed = $("#" + id).attr('data-used');
-        if (alreadyUsed == "true") {
+        if (alreadyUsed === "true") {
             $("#" + id).removeClass('broken');
             $("td[data-used='false']").css('background', '#7bc4ff');
             $("#" + id).data('used', 'false');
             resetShip(id);
+            resetSelectedShip();
         } else {
             if (id !== selected.id) {
                 if (selected.id != "") {
@@ -269,23 +270,15 @@ function choose(cellsNumber, id) {
 }
 
 function setSelectedShip(cellsNumber, id) {
-    if (gameStarted === false && setAndResetLoading === false) {
-        setAndResetLoading = true;
-        selected.id = id;
-        selected.count = cellsNumber;
-        selected.orientation = orientation;
-    }
-    setAndResetLoading = false;
+    selected.id = id;
+    selected.count = cellsNumber;
+    selected.orientation = orientation;
 }
 
 function resetSelectedShip() {
-    if (gameStarted === false && setAndResetLoading === false) {
-        setAndResetLoading = true;
-        selected.id = "";
-        selected.count = 0;
-        selected.orientation = orientation;
-    }
-    setAndResetLoading = false;
+    selected.id = "";
+    selected.count = 0;
+    selected.orientation = orientation;
 }
 
 function setShip(formBackend = false) {
