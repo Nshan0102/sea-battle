@@ -117,6 +117,7 @@ let ships = {
 };
 let allShipsAreReady = [];
 let gameStarted = false;
+let myTurn = false;
 
 $(window).ready(function () {
     $.ajaxSetup({
@@ -165,6 +166,11 @@ $(window).ready(function () {
             let coordinates = $(this).attr('data-opponent').split('-');
             fire(coordinates[0], coordinates[1]);
         }
+    });
+
+    $('td[data-opponent!=""]').contextmenu(function (event) {
+        event.preventDefault();
+        $(this).toggleClass('healthyChecked');
     });
 });
 
@@ -368,8 +374,13 @@ function fire(x, y) {
         },
         success: function (res) {
             if (res.status === 'success') {
-                $("td[data-opponent='" + x + "-" + y + "']").addClass('broken');
+                $("td[data-opponent='" + x + "-" + y + "']").addClass('wounded');
                 $(this).attr('data-clean', 'true');
+                if (res.ship.length > 0) {
+                    for (let i = 0; i < res.ship.length; i++) {
+                        $("td[data-opponent='" + res.ship[i]['index'] + "']").removeClass('wounded').addClass('broken');
+                    }
+                }
             } else if (res.status === 'empty') {
                 $("td[data-opponent='" + x + "-" + y + "']").addClass('healthy');
                 $(this).attr('data-clean', 'true');
@@ -397,9 +408,9 @@ function makeBrokenOnMyBoard(index) {
     let cell = $("td[data-index='" + index + "']")[0];
     let attr = $(cell).attr('data-ship');
     let isUsed = typeof attr !== typeof undefined && attr !== false;
-    if (isUsed === true){
+    if (isUsed === true) {
         $("td[data-index='" + index + "']").addClass('broken');
-    }else {
+    } else {
         $("td[data-index='" + index + "']").addClass('healthy');
     }
 }
@@ -407,9 +418,9 @@ function makeBrokenOnMyBoard(index) {
 function showFires(fires, succeeds, board) {
     for (let i = 0; i < fires.length; i++) {
         let cell = $("td[data-" + board + "='" + fires[i] + "']")[0];
-        if (succeeds.indexOf(fires[i]) >= 0){
+        if (succeeds.indexOf(fires[i]) >= 0) {
             $(cell).addClass('broken');
-        }else{
+        } else {
             $(cell).addClass('healthy');
         }
     }

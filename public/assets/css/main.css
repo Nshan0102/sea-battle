@@ -7,12 +7,20 @@ td{
     font-weight: bold;
 }
 
+.wounded {
+    background: #ff00006b!important;
+}
+
 .broken {
     background: red!important;
 }
 
 .healthy {
     background: green!important;
+}
+
+.healthyChecked {
+    background: #008000ad!important;
 }
 
 .width-100 {

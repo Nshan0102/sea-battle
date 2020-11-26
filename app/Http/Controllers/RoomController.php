@@ -240,6 +240,7 @@ class RoomController extends Controller
         return response()->json([
             'index' => $index,
             'status' => $shot['status'],
+            'ship' => isset($shot['isShipBroken']) && $shot['isShipBroken'] ? $shot['ship'] : [],
             'message' => $shot['message']
         ]);
     }
