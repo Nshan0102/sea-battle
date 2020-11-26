@@ -118,6 +118,7 @@ let ships = {
 let allShipsAreReady = [];
 let gameStarted = false;
 let setAndResetLoading = false;
+let chooseTime = new Date().getTime() / 1000;
 
 $(window).ready(function () {
     $.ajaxSetup({
@@ -236,28 +237,33 @@ function checkIfCellsUsed(row, column) {
 }
 
 function choose(cellsNumber, id) {
-    let alreadyUsed = $("#" + id).attr('data-used');
-    if (alreadyUsed == "true") {
-        $("#" + id).removeClass('broken');
-        $("td[data-used='false']").css('background', '#7bc4ff');
-        $("#" + id).data('used', 'false');
-        resetShip(id);
-    } else {
-        if (id !== selected.id) {
-            if (selected.id != "") {
-                $("#" + selected.id).removeClass('broken');
-                $("td[data-used='false']").css('background', '#7bc4ff');
-                $("#" + selected.id).attr('data-used', 'false');
-                resetSelectedShip();
-            }
-            $("#" + id).addClass('broken');
-            setSelectedShip(cellsNumber, id);
-            $("#" + id).attr('data-used', 'true');
-        } else {
+    let now = new Date().getTime() / 1000;
+    let dif = now - chooseTime;
+    if (dif > 1) {
+        chooseTime = new Date().getTime() / 1000;
+        let alreadyUsed = $("#" + id).attr('data-used');
+        if (alreadyUsed == "true") {
             $("#" + id).removeClass('broken');
             $("td[data-used='false']").css('background', '#7bc4ff');
             $("#" + id).data('used', 'false');
-            resetSelectedShip();
+            resetShip(id);
+        } else {
+            if (id !== selected.id) {
+                if (selected.id != "") {
+                    $("#" + selected.id).removeClass('broken');
+                    $("td[data-used='false']").css('background', '#7bc4ff');
+                    $("#" + selected.id).attr('data-used', 'false');
+                    resetSelectedShip();
+                }
+                $("#" + id).addClass('broken');
+                setSelectedShip(cellsNumber, id);
+                $("#" + id).attr('data-used', 'true');
+            } else {
+                $("#" + id).removeClass('broken');
+                $("td[data-used='false']").css('background', '#7bc4ff');
+                $("#" + id).data('used', 'false');
+                resetSelectedShip();
+            }
         }
     }
 }
