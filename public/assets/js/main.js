@@ -117,6 +117,7 @@ let ships = {
 };
 let allShipsAreReady = [];
 let gameStarted = false;
+let setAndResetLoading = false;
 
 $(window).ready(function () {
     $.ajaxSetup({
@@ -253,7 +254,6 @@ function choose(cellsNumber, id) {
             setSelectedShip(cellsNumber, id);
             $("#" + id).attr('data-used', 'true');
         } else {
-            alert(7)
             $("#" + id).removeClass('broken');
             $("td[data-used='false']").css('background', '#7bc4ff');
             $("#" + id).data('used', 'false');
@@ -308,7 +308,8 @@ function setAllShips() {
 }
 
 function resetShip(ship) {
-    if (ship && gameStarted === false) {
+    if (ship && gameStarted === false && setAndResetLoading === false) {
+        setAndResetLoading = true
         let shipName = ship.split('-')[0];
         let shipIndex = parseInt(ship.split('-')[1]);
         for (let i = 0; i < ships[shipName][shipIndex].length; i++) {
@@ -319,6 +320,7 @@ function resetShip(ship) {
             $('td[data-index="' + ships[shipName][shipIndex][i]['index'] + '"]').removeAttr('data-ship');
             ships[shipName][shipIndex][i]['index'] = "";
         }
+        setAndResetLoading = false;
         $("#" + ship).removeClass('broken');
         $("#" + ship).attr('data-used', 'false');
     }
@@ -366,7 +368,7 @@ function isReady() {
 }
 
 function fire(x, y) {
-    if (gameStarted){
+    if (gameStarted) {
         $.ajax({
             type: 'POST',
             url: $('#fire_url').val(),
@@ -398,7 +400,7 @@ function fire(x, y) {
                 toastr["error"](message, 'Oops!', {'progressBar': true});
             }
         });
-    }else{
+    } else {
         toastr["info"]("You and/or your opponent are not ready to play", 'Hey!', {'progressBar': true});
     }
 }

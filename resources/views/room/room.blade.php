@@ -84,20 +84,20 @@
                     ({{$authUser->email}})
                     <table id="owner">
                         <tr>
-                            <td data-used="false" data-index=""></td>
-                            <td data-used="false" data-index="">1</td>
-                            <td data-used="false" data-index="">2</td>
-                            <td data-used="false" data-index="">3</td>
-                            <td data-used="false" data-index="">4</td>
-                            <td data-used="false" data-index="">5</td>
-                            <td data-used="false" data-index="">6</td>
-                            <td data-used="false" data-index="">7</td>
-                            <td data-used="false" data-index="">8</td>
-                            <td data-used="false" data-index="">9</td>
-                            <td data-used="false" data-index="">10</td>
+                            <td data-used="false"></td>
+                            <td data-used="false">1</td>
+                            <td data-used="false">2</td>
+                            <td data-used="false">3</td>
+                            <td data-used="false">4</td>
+                            <td data-used="false">5</td>
+                            <td data-used="false">6</td>
+                            <td data-used="false">7</td>
+                            <td data-used="false">8</td>
+                            <td data-used="false">9</td>
+                            <td data-used="false">10</td>
                         </tr>
                         <tr>
-                            <td data-used="false" data-index="">A</td>
+                            <td data-used="false">A</td>
                             <td data-used="false" data-index="1-1"></td>
                             <td data-used="false" data-index="1-2"></td>
                             <td data-used="false" data-index="1-3"></td>
@@ -110,7 +110,7 @@
                             <td data-used="false" data-index="1-10"></td>
                         </tr>
                         <tr>
-                            <td data-used="false" data-index="">B</td>
+                            <td data-used="false">B</td>
                             <td data-used="false" data-index="2-1"></td>
                             <td data-used="false" data-index="2-2"></td>
                             <td data-used="false" data-index="2-3"></td>
@@ -123,7 +123,7 @@
                             <td data-used="false" data-index="2-10"></td>
                         </tr>
                         <tr>
-                            <td data-used="false" data-index="">C</td>
+                            <td data-used="false">C</td>
                             <td data-used="false" data-index="3-1"></td>
                             <td data-used="false" data-index="3-2"></td>
                             <td data-used="false" data-index="3-3"></td>
@@ -136,7 +136,7 @@
                             <td data-used="false" data-index="3-10"></td>
                         </tr>
                         <tr>
-                            <td data-used="false" data-index="">D</td>
+                            <td data-used="false">D</td>
                             <td data-used="false" data-index="4-1"></td>
                             <td data-used="false" data-index="4-2"></td>
                             <td data-used="false" data-index="4-3"></td>
@@ -149,7 +149,7 @@
                             <td data-used="false" data-index="4-10"></td>
                         </tr>
                         <tr>
-                            <td data-used="false" data-index="">E</td>
+                            <td data-used="false">E</td>
                             <td data-used="false" data-index="5-1"></td>
                             <td data-used="false" data-index="5-2"></td>
                             <td data-used="false" data-index="5-3"></td>
@@ -162,7 +162,7 @@
                             <td data-used="false" data-index="5-10"></td>
                         </tr>
                         <tr>
-                            <td data-used="false" data-index="">F</td>
+                            <td data-used="false">F</td>
                             <td data-used="false" data-index="6-1"></td>
                             <td data-used="false" data-index="6-2"></td>
                             <td data-used="false" data-index="6-3"></td>
@@ -175,7 +175,7 @@
                             <td data-used="false" data-index="6-10"></td>
                         </tr>
                         <tr>
-                            <td data-used="false" data-index="">G</td>
+                            <td data-used="false">G</td>
                             <td data-used="false" data-index="7-1"></td>
                             <td data-used="false" data-index="7-2"></td>
                             <td data-used="false" data-index="7-3"></td>
@@ -188,7 +188,7 @@
                             <td data-used="false" data-index="7-10"></td>
                         </tr>
                         <tr>
-                            <td data-used="false" data-index="">H</td>
+                            <td data-used="false">H</td>
                             <td data-used="false" data-index="8-1"></td>
                             <td data-used="false" data-index="8-2"></td>
                             <td data-used="false" data-index="8-3"></td>
@@ -201,7 +201,7 @@
                             <td data-used="false" data-index="8-10"></td>
                         </tr>
                         <tr>
-                            <td data-used="false" data-index="">I</td>
+                            <td data-used="false">I</td>
                             <td data-used="false" data-index="9-1"></td>
                             <td data-used="false" data-index="9-2"></td>
                             <td data-used="false" data-index="9-3"></td>
@@ -214,7 +214,7 @@
                             <td data-used="false" data-index="9-10"></td>
                         </tr>
                         <tr>
-                            <td data-used="false" data-index="">J</td>
+                            <td data-used="false">J</td>
                             <td data-used="false" data-index="10-1"></td>
                             <td data-used="false" data-index="10-2"></td>
                             <td data-used="false" data-index="10-3"></td>
