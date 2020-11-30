@@ -413,7 +413,7 @@ function fire(x, y) {
 }
 
 function getIndexName(index) {
-    let letters = ['', 'A', 'B', 'C', 'D', 'E', 'G', 'H', 'I', 'J'];
+    let letters = ['', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
     let indexNumber = parseInt(index.split('-')[0]);
     let letter = letters[indexNumber];
     return letter + '-' + index.split('-')[1];
