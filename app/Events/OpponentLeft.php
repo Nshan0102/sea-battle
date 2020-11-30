@@ -4,8 +4,6 @@ namespace App\Events;
 
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -16,17 +14,20 @@ class OpponentLeft implements ShouldBroadcast
 
     public $user;
     public $userLeft;
+    public $roomId;
 
     /**
      * Create a new event instance.
      *
      * @param $user
      * @param $userLeft
+     * @param $roomId
      */
-    public function __construct($user,$userLeft)
+    public function __construct($user, $userLeft, $roomId)
     {
         $this->user = $user;
         $this->userLeft = $userLeft;
+        $this->roomId = $roomId;
     }
 
     /**
@@ -36,11 +37,11 @@ class OpponentLeft implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('room');
+        return new Channel('room.'.$this->roomId);
     }
 
     public function broadcastAs()
     {
-        return 'opponent-left-'.$this->user->id;
+        return 'opponent-left-' . $this->user->id;
     }
 }

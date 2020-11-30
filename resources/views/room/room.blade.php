@@ -412,7 +412,7 @@
 @push('js')
     <script src="{{asset('js/events.js')}}"></script>
     <script>
-        window.Echo.channel('room')
+        window.Echo.channel('room.{{$room->id}}')
             .listen('.opponent-joined-{{$authUser->id}}', (e) => {
                 let name = e.joinedUser.name ? e.joinedUser.name : "";
                 let email = e.joinedUser.email ? e.joinedUser.email : "";

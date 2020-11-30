@@ -13,6 +13,6 @@ use Illuminate\Support\Facades\Broadcast;
 | used to check if an authenticated user can listen to the channel.
 |
 */
-Broadcast::channel('room', function () {
+Broadcast::channel('room.{roomId}', function () {
     return Auth::check();
 });

@@ -32,7 +32,7 @@ class GameReady implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('room');
+        return new Channel('room.'.$this->room->id);
     }
 
     public function broadcastAs()

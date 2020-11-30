@@ -14,17 +14,20 @@ class Fire implements ShouldBroadcast
 
     public $notifyToUser;
     public $index;
+    public $roomId;
 
     /**
      * Create a new event instance.
      *
      * @param $notifyToUser
      * @param $index
+     * @param $roomId
      */
-    public function __construct($notifyToUser, $index)
+    public function __construct($notifyToUser, $index, $roomId)
     {
         $this->notifyToUser = $notifyToUser;
         $this->index = $index;
+        $this->roomId = $roomId;
     }
 
     /**
@@ -34,7 +37,7 @@ class Fire implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('room');
+        return new Channel('room.'.$this->roomId);
     }
 
     public function broadcastAs()

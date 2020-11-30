@@ -16,17 +16,20 @@ class OpponentReady implements ShouldBroadcast
 
     public $notifyToUser;
     public $readyUser;
+    public $roomId;
 
     /**
      * Create a new event instance.
      *
      * @param $notifyToUser
      * @param $readyUser
+     * @param $roomId
      */
-    public function __construct($notifyToUser, $readyUser)
+    public function __construct($notifyToUser, $readyUser, $roomId)
     {
         $this->notifyToUser = $notifyToUser;
         $this->readyUser = $readyUser;
+        $this->roomId = $roomId;
     }
 
     /**
@@ -36,7 +39,7 @@ class OpponentReady implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('room');
+        return new Channel('room.'.$this->roomId);
     }
 
     public function broadcastAs()

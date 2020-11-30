@@ -14,17 +14,20 @@ class OpponentJoined implements ShouldBroadcast
 
     public $notifyToUser;
     public $joinedUser;
+    public $roomId;
 
     /**
      * Create a new event instance.
      *
      * @param $notifyToUser
      * @param $joinedUser
+     * @param $roomId
      */
-    public function __construct($notifyToUser, $joinedUser)
+    public function __construct($notifyToUser, $joinedUser, $roomId)
     {
         $this->notifyToUser = $notifyToUser;
         $this->joinedUser = $joinedUser;
+        $this->roomId = $roomId;
     }
 
     /**
@@ -34,7 +37,7 @@ class OpponentJoined implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('room');
+        return new Channel('room.'.$this->roomId);
     }
 
     public function broadcastAs()
