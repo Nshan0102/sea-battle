@@ -10,6 +10,10 @@ Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
-.idea/
+.idea
 laravel-echo-server.json
 laravel-echo-server.lock
+package-lock.json
+public/css/app.css
+public/js/app.js
+public/mix-manifest.json

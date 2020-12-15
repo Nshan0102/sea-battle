@@ -6186,8 +6186,8 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
 window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   broadcaster: 'pusher',
-  key: "71adf3667c21d808b3c9",
-  cluster: "ap2",
+  key: "e68ee940e2ff59462dfb",
+  cluster: "eu",
   encrypted: true
 });
 
@@ -6211,8 +6211,8 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\Doc\www\sea-battle\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\Doc\www\sea-battle\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\Nshan\www\sea-battle\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\Nshan\www\sea-battle\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
