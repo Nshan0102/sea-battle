@@ -27,7 +27,7 @@ class RoomController extends Controller
 
     /**
      * @param Request $request
-     * @return Application|Factory|View
+     * @return RedirectResponse|Redirector
      */
     public function create(Request $request)
     {
@@ -66,7 +66,9 @@ class RoomController extends Controller
             if ($room->owner->id !== $user->id) {
                 event(new OpponentJoined($room->owner, $user, $room->id));
             } else {
-                event(new OpponentJoined($room->opponent, $user, $room->id));
+                if ($room->opponent) {
+                    event(new OpponentJoined($room->opponent, $user, $room->id));
+                }
             }
             return view('room.room')->with([
                 'authUser' => $user,
@@ -202,7 +204,7 @@ class RoomController extends Controller
         $fires = $userIsOwner ? json_decode($room->owner_fires) : json_decode($room->opponent_fires);
         $shots = $userIsOwner ? $room->opponent_shots : $room->owner_shots;
         $succeeds = $userIsOwner ? json_decode($room->owner_succeeds) : json_decode($room->opponent_succeeds);
-        if (in_array($index, $fires)){
+        if (in_array($index, $fires)) {
             return response()->json([
                 'index' => $index,
                 'status' => 'fail',
@@ -214,15 +216,15 @@ class RoomController extends Controller
         if ($shot['status'] == 'success') {
             array_push($succeeds, $index);
             event(new Fire($notifyTo, $index, $room->id));
-            if (count($succeeds) === 20){
+            if (count($succeeds) === 20) {
                 event(new Fire($notifyTo, 'win', $room->id));
                 event(new Fire(auth()->user(), 'winner', $room->id));
                 $room->update([
                     'finished' => true
                 ]);
             }
-            is_numeric($shots) ? $shots += 1  : $shots = 1;
-        }elseif ($shot['status'] == 'empty'){
+            is_numeric($shots) ? $shots += 1 : $shots = 1;
+        } elseif ($shot['status'] == 'empty') {
             event(new Fire($notifyTo, $index, $room->id));
             $room->update([
                 'turn' => $userIsOwner ? $room->opponent_id : $room->owner_id
