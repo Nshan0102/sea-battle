@@ -66,7 +66,7 @@ class RoomController extends Controller
             if ($room->owner->id !== $user->id) {
                 event(new OpponentJoined($room->owner, $user, $room->id));
             } else {
-                event(new OpponentJoined($user, $room->owner, $room->id));
+                event(new OpponentJoined($room->opponent, $user, $room->id));
             }
             return view('room.room')->with([
                 'authUser' => $user,
