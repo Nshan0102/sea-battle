@@ -20,11 +20,13 @@ class Room extends Model
         'owner_succeeds',
         'opponent_succeeds',
         'started_at',
-        'ready'
+        'ready',
+        'finished'
     ];
 
     protected $casts = [
         'ready' => 'boolean',
+        'finished' => 'boolean'
     ];
 
     public function owner(){

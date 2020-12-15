@@ -117,6 +117,7 @@ let ships = {
 };
 let allShipsAreReady = [];
 let gameStarted = false;
+let gameFinished = false;
 let setAndResetLoading = false;
 let chooseTime = new Date().getTime() / 1000;
 
@@ -375,7 +376,7 @@ function isReady() {
 }
 
 function fire(x, y) {
-    if (gameStarted) {
+    if (gameStarted && !gameFinished) {
         $.ajax({
             type: 'POST',
             url: $('#fire_url').val(),
@@ -408,7 +409,13 @@ function fire(x, y) {
             }
         });
     } else {
-        toastr["info"]("You and/or your opponent are not ready to play", 'Hey!', {'progressBar': true});
+        switch (gameFinished) {
+            case true:
+                toastr["info"]("The game has finished", 'Hey!', {'progressBar': true});
+                break;
+            default:
+                toastr["info"]("You and/or your opponent are not ready to play", 'Hey!', {'progressBar': true});
+        }
     }
 }
 

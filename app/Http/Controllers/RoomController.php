@@ -192,6 +192,11 @@ class RoomController extends Controller
                 'error' => 'Not your turn!'
             ], 403);
         }
+        if ($room->finished) {
+            return response()->json([
+                'error' => 'Game has finished!'
+            ], 403);
+        }
         $notifyTo = $userIsOwner ? User::find($room->opponent_id) : User::find($room->owner_id);
         $opponentShips = $userIsOwner ? json_decode($room->opponent_ships) : json_decode($room->owner_ships);
         $fires = $userIsOwner ? json_decode($room->owner_fires) : json_decode($room->opponent_fires);
@@ -212,6 +217,9 @@ class RoomController extends Controller
             if (count($succeeds) === 20){
                 event(new Fire($notifyTo, 'win', $room->id));
                 event(new Fire(auth()->user(), 'winner', $room->id));
+                $room->update([
+                    'finished' => true
+                ]);
             }
             is_numeric($shots) ? $shots += 1  : $shots = 1;
         }elseif ($shot['status'] == 'empty'){
