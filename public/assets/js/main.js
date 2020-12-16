@@ -447,3 +447,34 @@ function showFires(fires, succeeds, board) {
         }
     }
 }
+
+function copyLink(ev, anchor) {
+    ev.preventDefault();
+    let $temp = $("<input>");
+    $("body").append($temp);
+    $temp.val($(anchor).attr('href')).select();
+    document.execCommand("copy");
+    $temp.remove();
+    toastr["success"](`Yep!`, 'Link was copied', {'progressBar': true});
+}
+
+function messageHandler() {
+    let message = $('#messageInput').val();
+    if (message && message.length > 0){
+        appendMessage(message, 'white');
+        sendMessage(message);
+        $('#messageInput').val('');
+    }
+}
+
+function appendMessage(message, color){
+    $('#chat-body').append(`<span class="w-100 message" style="color: ${color}">${message}</span>`);
+    let div = $('#chat-body')[0];
+    div.scrollTop = div.scrollHeight;
+}
+
+$('#messageInput').on("keyup", function(event) {
+    if (event.keyCode === 13) {
+        messageHandler();
+    }
+});

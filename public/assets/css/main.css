@@ -1,4 +1,4 @@
-td{
+td {
     border: 1px solid black;
     width: 30px;
     height: 30px;
@@ -8,30 +8,30 @@ td{
 }
 
 .wounded {
-    background: #ff00006b!important;
+    background: #ff00006b !important;
 }
 
 .broken {
-    background: red!important;
+    background: red !important;
 }
 
 .healthy {
-    background: green!important;
+    background: green !important;
 }
 
 .healthyChecked {
-    background: #008000ad!important;
+    background: #008000ad !important;
 }
 
 .width-100 {
-    width: 100%!important;
+    width: 100% !important;
 }
 
-#owner{
+#owner {
     margin: 5px;
 }
 
-#opponent{
+#opponent {
     margin: 5px;
 }
 
@@ -39,4 +39,37 @@ td{
     padding: 10px;
     border-radius: 25px;
     background: #7bc4ff82;
+}
+
+#chat-body {
+    width: 100%;
+    height: 54px;
+    border-top-left-radius: 10px;
+    padding: 0 20px 0 20px;
+    background: #1d68a75c;
+    overflow-y: scroll;
+}
+
+.message {
+    text-align: center;
+    word-break: break-word;
+}
+
+.message:before {
+    content: '- ';
+}
+
+#messageInput {
+    border: 1px solid #adc9df;
+    border-bottom-left-radius: 10px;
+    padding-left: 10px;
+    background: aliceblue;
+    width: 80%;
+}
+
+#messageButton {
+    border: 1px solid #adc9df;
+    background: #a5b7c5;
+    border-bottom-right-radius: 10px;
+    width: 20%;
 }

@@ -71,12 +71,15 @@
     <main class="py-4">
         <div class="container">
             <div id="join-link-section" class="row d-flex justify-content-around align-items-center m-3">
-                @if($room->owner->id == $authUser->id)
+                @if($room->owner->id == $authUser->id && !$room->opponent)
                     <a title="Send this link to your friend (click to copy)"
                        href="{{route('join', $room)}}" onclick="copyLink(event, this)">
                         <h5 class="join-link">{{route('join', $room)}}</h5>
                     </a>
                 @endif
+                <div id="chat-body" class="row d-flex justify-content-center align-items-center"></div>
+                <input type="text" name="message" maxlength="200" id="messageInput" placeholder="Type your message">
+                <input type="button" id="messageButton" value="send" onclick="messageHandler()">
             </div>
             <div class="row d-flex justify-content-around align-items-center">
                 <div id="auth-section" class="d-flex justify-content-start align-items-center flex-column">
@@ -408,6 +411,9 @@
         <input type="hidden" id="room_update_url" value="{{route('update-room-as-opponent', $room)}}">
     @endif
     <input type="hidden" id="fire_url" value="{{route('fire', $room)}}">
+    <div>
+        <audio src="{{asset('assets/sounds/new-message.mp3')}}"></audio>
+    </div>
 @endsection
 @push('js')
     <script src="{{asset('js/events.js')}}"></script>
@@ -420,6 +426,7 @@
                 $("#opponent-name").html(name);
                 $("#opponent-email").html(`( ${email} )`);
                 $("#add-friend").removeClass('d-none');
+                $("#join-link").parent().addClass('d-none');
                 $("#opponent-section").removeClass('d-none').addClass('d-flex');
             }).listen('.opponent-left-{{$authUser->id}}', (e) => {
             let name = e.userLeft.name ? e.userLeft.name : "";
@@ -428,6 +435,11 @@
             $("#opponent-email").html("");
             $("#opponent-name").html("");
             $("#add-friend").addClass('d-none');
+        }).listen('.message-{{$authUser->id}}', (e) => {
+            appendMessage(e.message, 'black');
+            const audio = document.querySelector("audio");
+            audio.volume = 0.2;
+            audio.play();
         }).listen('.opponent-ready-{{$authUser->id}}', (e) => {
             toastr["success"]('Your opponent is ready to play!', 'Yeah', {'progressBar': true});
         }).listen('.game-ready-{{$room->id}}', (e) => {
@@ -504,14 +516,24 @@
             });
         }
 
-        function copyLink(ev, anchor) {
-            ev.preventDefault();
-            let $temp = $("<input>");
-            $("body").append($temp);
-            $temp.val($(anchor).attr('href')).select();
-            document.execCommand("copy");
-            $temp.remove();
-            toastr["success"](`Yep!`, 'Link was copied', {'progressBar': true});
+        function sendMessage(message) {
+            $.ajax({
+                type: 'POST',
+                url: "{{route('message', $room)}}",
+                dataType: 'JSON',
+                data: {
+                    message: message
+                },
+                error: function (xhr, status, error) {
+                    $('#messageInput').val($('#chat-body').find('span').text());
+                    $('#chat-body').find('span').last().remove();
+                    let message = 'Oops! Something went wrong';
+                    if (xhr.responseJSON && (xhr.responseJSON.error || xhr.responseJSON.errors)) {
+                        message = xhr.responseJSON.error ? xhr.responseJSON.error : xhr.responseJSON.errors.message[0];
+                    }
+                    toastr["error"](message, 'Oops!', {'progressBar': true});
+                }
+            });
         }
     </script>
 @endpush

@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Events\Fire;
 use App\Events\GameReady;
+use App\Events\Message;
 use App\Events\OpponentJoined;
 use App\Events\OpponentReady;
 use App\Http\Requests\FireRequest;
+use App\Http\Requests\MessageRequest;
 use App\Http\Requests\RoomUpdateRequest;
 use App\Room;
 use App\Traits\RoomTrait;
@@ -185,6 +187,11 @@ class RoomController extends Controller
         ], 200);
     }
 
+    /**
+     * @param FireRequest $request
+     * @param Room $room
+     * @return JsonResponse
+     */
     public function fire(FireRequest $request, Room $room)
     {
         $index = $request->x_coordinate . '-' . $request->y_coordinate;
@@ -253,5 +260,21 @@ class RoomController extends Controller
             'ship' => isset($shot['isShipBroken']) && $shot['isShipBroken'] ? $shot['ship'] : [],
             'message' => $shot['message']
         ]);
+    }
+
+    public function message(MessageRequest $request, Room $room)
+    {
+        $message = $request->message;
+        if (!$room->opponent){
+            return response()->json([
+                'error' => 'You can send messages only during of game!',
+                'message' => $message
+            ], 403);
+        }
+        $notifyTo = auth()->user()->id === $room->owner->id ? $room->opponent : $room->owner;
+        event(new Message($notifyTo, $message, $room->id));
+        return response()->json([
+            'message' => $message
+        ], 200);
     }
 }
