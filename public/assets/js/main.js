@@ -190,15 +190,17 @@ $(window).ready(function () {
 
     $('td[data-opponent!=""]').contextmenu(function (event) {
         let opponent = $(this).attr('data-opponent');
-        if (typeof opponent !== typeof undefined && opponent !== false && opponent !== "") {
-            event.preventDefault();
-            $(this).toggleClass('healthyChecked');
-            if ($(this).hasClass('healthyChecked')){
-                healthyChecked.push(opponent);
-                localStorage.setItem('healthyChecked_' + roomId, JSON.stringify(healthyChecked));
-            }else{
-                healthyChecked = healthyChecked.filter((healthyChecked) => healthyChecked !== opponent);
-                localStorage.setItem('healthyChecked_' + roomId, JSON.stringify(healthyChecked));
+        if (!$(this).hasClass('healthy') && !$(this).hasClass('wounded') && !$(this).hasClass('broken')){
+            if (typeof opponent !== typeof undefined && opponent !== false && opponent !== "") {
+                event.preventDefault();
+                $(this).toggleClass('healthyChecked');
+                if ($(this).hasClass('healthyChecked')){
+                    healthyChecked.push(opponent);
+                    localStorage.setItem('healthyChecked_' + roomId, JSON.stringify(healthyChecked));
+                }else{
+                    healthyChecked = healthyChecked.filter((healthyChecked) => healthyChecked !== opponent);
+                    localStorage.setItem('healthyChecked_' + roomId, JSON.stringify(healthyChecked));
+                }
             }
         }
     });
@@ -401,7 +403,7 @@ function isReady() {
 }
 
 function fire(x, y) {
-    let checked = $(`[data-opponent='${x}-${y}']`).hasClass('healthyChecked');
+    let checked = $(`[data-opponent='${x}-${y}']`).hasClass('healthyChecked') || $(`[data-opponent='${x}-${y}']`).hasClass('healthy') || $(`[data-opponent='${x}-${y}']`).hasClass('wounded') || $(`[data-opponent='${x}-${y}']`).hasClass('broken');
     if (gameStarted && !gameFinished && !checked) {
         $.ajax({
             type: 'POST',
