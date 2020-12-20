@@ -77,6 +77,8 @@
                         <h5 class="join-link">{{route('join', $room)}}</h5>
                     </a>
                 @endif
+            </div>
+            <div class="row d-flex justify-content-around align-items-center m-3">
                 <div id="chat-body" class="row d-flex justify-content-center align-items-center"></div>
                 <input type="text" name="message" maxlength="200" id="messageInput" placeholder="Type your message">
                 <input type="button" id="messageButton" value="send" onclick="messageHandler()">
@@ -426,7 +428,7 @@
                 $("#opponent-name").html(name);
                 $("#opponent-email").html(`( ${email} )`);
                 $("#add-friend").removeClass('d-none');
-                $("#join-link").parent().addClass('d-none');
+                $("#join-link-section").removeClass('d-flex').addClass('d-none');
                 $("#opponent-section").removeClass('d-none').addClass('d-flex');
             }).listen('.opponent-left-{{$authUser->id}}', (e) => {
             let name = e.userLeft.name ? e.userLeft.name : "";
@@ -435,6 +437,7 @@
             $("#opponent-email").html("");
             $("#opponent-name").html("");
             $("#add-friend").addClass('d-none');
+            $("#join-link-section").removeClass('d-none').addClass('d-flex');
         }).listen('.message-{{$authUser->id}}', (e) => {
             appendMessage(e.message, 'black');
             const audio = document.querySelector("audio");
