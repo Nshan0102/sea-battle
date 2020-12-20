@@ -1,3 +1,4 @@
+let roomId = 0;
 let orientation = "right";
 let prepared = [];
 let selected = {
@@ -120,6 +121,8 @@ let gameStarted = false;
 let gameFinished = false;
 let setAndResetLoading = false;
 let chooseTime = new Date().getTime() / 1000;
+let volume = "on";
+let healthyChecked = [];
 
 $(window).ready(function () {
     $.ajaxSetup({
@@ -133,6 +136,21 @@ $(window).ready(function () {
         $(this).addClass('btn-primary');
         orientation = $(this).data('orientation');
     });
+
+    if (roomId !== 0){
+        let healthyCheckedCache = localStorage.getItem('healthyChecked_' + roomId);
+        let messagesCache = localStorage.getItem('messages_' + roomId);
+        if (healthyCheckedCache && messagesCache){
+            $('#chat-body').html(messagesCache);
+            healthyChecked = JSON.parse(healthyCheckedCache);
+            for (let i = 0; i < healthyChecked.length; i++){
+                $('[data-opponent="'+ healthyChecked[i] + '"]').addClass('healthyChecked');
+            }
+        }else{
+            localStorage.setItem('healthyChecked_' + roomId, JSON.stringify(healthyChecked));
+            localStorage.setItem('messages_' + roomId, '');
+        }
+    }
 
     let ownerCells = 'td[data-index!=""]';
 
@@ -175,6 +193,13 @@ $(window).ready(function () {
         if (typeof opponent !== typeof undefined && opponent !== false && opponent !== "") {
             event.preventDefault();
             $(this).toggleClass('healthyChecked');
+            if ($(this).hasClass('healthyChecked')){
+                healthyChecked.push(opponent);
+                localStorage.setItem('healthyChecked_' + roomId, JSON.stringify(healthyChecked));
+            }else{
+                healthyChecked = healthyChecked.filter((healthyChecked) => healthyChecked !== opponent);
+                localStorage.setItem('healthyChecked_' + roomId, JSON.stringify(healthyChecked));
+            }
         }
     });
 });
@@ -376,7 +401,8 @@ function isReady() {
 }
 
 function fire(x, y) {
-    if (gameStarted && !gameFinished) {
+    let checked = $(`[data-opponent='${x}-${y}']`).hasClass('healthyChecked');
+    if (gameStarted && !gameFinished && !checked) {
         $.ajax({
             type: 'POST',
             url: $('#fire_url').val(),
@@ -387,6 +413,7 @@ function fire(x, y) {
             },
             success: function (res) {
                 if (res.status === 'success') {
+                    playSound("fire-shot");
                     $("td[data-opponent='" + x + "-" + y + "']").addClass('wounded');
                     $(this).attr('data-clean', 'true');
                     if (res.ship.length > 0) {
@@ -395,6 +422,7 @@ function fire(x, y) {
                         }
                     }
                 } else if (res.status === 'empty') {
+                    playSound("fire-nothing");
                     $("td[data-opponent='" + x + "-" + y + "']").addClass('healthy');
                     $(this).attr('data-clean', 'true');
                 }
@@ -414,7 +442,7 @@ function fire(x, y) {
                 toastr["info"]("The game has finished", 'Hey!', {'progressBar': true});
                 break;
             default:
-                toastr["info"]("You and/or your opponent are not ready to play", 'Hey!', {'progressBar': true});
+                let doThis = checked  ? '' : toastr["info"]("You and/or your opponent are not ready to play", 'Hey!', {'progressBar': true});
         }
     }
 }
@@ -432,8 +460,10 @@ function makeBrokenOnMyBoard(index) {
     let isUsed = typeof attr !== typeof undefined && attr !== false;
     if (isUsed === true) {
         $("td[data-index='" + index + "']").addClass('broken');
+        playSound("fire-shot");
     } else {
         $("td[data-index='" + index + "']").addClass('healthy');
+        playSound("fire-nothing");
     }
 }
 
@@ -460,20 +490,38 @@ function copyLink(ev, anchor) {
 
 function messageHandler() {
     let message = $('#messageInput').val();
-    if (message && message.length > 0){
+    if (message && message.length > 0) {
         appendMessage(message, 'white');
         sendMessage(message);
         $('#messageInput').val('');
     }
 }
 
-function appendMessage(message, color){
+function appendMessage(message, color) {
     $('#chat-body').append(`<span class="w-100 message" style="color: ${color}">${message}</span>`);
     let div = $('#chat-body')[0];
     div.scrollTop = div.scrollHeight;
+    localStorage.setItem('messages_' + roomId, $('#chat-body').html());
 }
 
-$('#messageInput').on("keyup", function(event) {
+function playSound(id) {
+    if (volume === "on"){
+        let audio = new Audio($('#' + id).attr('src'));
+        audio.play();
+    }
+}
+
+function toggleBoard(el) {
+    $(el).text($(el).text() === 'Hide my board' ? 'Show my board' : 'Hide my board');
+    $('#owner').fadeToggle()
+}
+
+function toggleSounds(el) {
+    $(el).text($(el).text() === 'Turn off sounds' ? 'Turn on sounds' : 'Turn off sounds');
+    volume = (volume === "on" ? "off" : "on");
+}
+
+$('#messageInput').on("keyup", function (event) {
     if (event.keyCode === 13) {
         messageHandler();
     }

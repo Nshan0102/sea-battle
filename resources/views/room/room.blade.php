@@ -87,6 +87,11 @@
                 <div id="auth-section" class="d-flex justify-content-start align-items-center flex-column">
                     <h4>{{$authUser->name}}</h4>
                     ({{$authUser->email}})
+                    <div class="d-flex justify-content-around align-items-center w-100">
+                        <a href="javascript:void(0)" onclick="toggleBoard(this)">Hide my board</a>
+                        <span class="pl-2 pr-2"> / </span>
+                        <a href="javascript:void(0)" onclick="toggleSounds(this)">Turn off sounds</a>
+                    </div>
                     <table id="owner">
                         <tr>
                             <td data-used="false"></td>
@@ -414,12 +419,19 @@
     @endif
     <input type="hidden" id="fire_url" value="{{route('fire', $room)}}">
     <div>
-        <audio src="{{asset('assets/sounds/new-message.mp3')}}"></audio>
+        <audio id="new-message" src="{{asset('assets/sounds/new-message.mp3')}}"></audio>
+    </div>
+    <div>
+        <audio id="fire-nothing" src="{{asset('assets/sounds/fire-nothing.mp3')}}"></audio>
+    </div>
+    <div>
+        <audio id="fire-shot" src="{{asset('assets/sounds/fire-shot.mp3')}}"></audio>
     </div>
 @endsection
 @push('js')
     <script src="{{asset('js/events.js')}}"></script>
     <script>
+        roomId = parseInt("{{$room->id}}");
         window.Echo.channel('room.{{$room->id}}')
             .listen('.opponent-joined-{{$authUser->id}}', (e) => {
                 let name = e.joinedUser.name ? e.joinedUser.name : "";
@@ -431,40 +443,38 @@
                 $("#join-link-section").removeClass('d-flex').addClass('d-none');
                 $("#opponent-section").removeClass('d-none').addClass('d-flex');
             }).listen('.opponent-left-{{$authUser->id}}', (e) => {
-            let name = e.userLeft.name ? e.userLeft.name : "";
-            toastr["error"](`Player ${name} has left the room!`, 'Oh no!', {'progressBar': true});
-            $("#opponent-section").removeClass('d-flex').addClass('d-none');
-            $("#opponent-email").html("");
-            $("#opponent-name").html("");
-            $("#add-friend").addClass('d-none');
-            $("#join-link-section").removeClass('d-none').addClass('d-flex');
-        }).listen('.message-{{$authUser->id}}', (e) => {
-            appendMessage(e.message, 'black');
-            const audio = document.querySelector("audio");
-            audio.volume = 0.2;
-            audio.play();
-        }).listen('.opponent-ready-{{$authUser->id}}', (e) => {
-            toastr["success"]('Your opponent is ready to play!', 'Yeah', {'progressBar': true});
-        }).listen('.game-ready-{{$room->id}}', (e) => {
-            $('#actions-section').hide();
-            $('#join-link-section').removeClass('d-flex').addClass('d-none');
-            gameStarted = true;
-            toastr["success"]('You are all done. Lets play', 'Yeah', {'progressBar': true});
-        }).listen('.room-deleted-{{$authUser->id}}', (e) => {
-            toastr["error"]('Owner deleted this room', 'Oops!', {'progressBar': true});
-            setTimeout(function () {
-                window.location.reload();
-            }, 3000);
-        }).listen('.fire-{{$authUser->id}}', (e) => {
-            if(e.index === 'win' || e.index === 'winner'){
-                let msg = e.index === 'win' ? 'Sorry, you loose' : "Congratulations, You won!";
-                toastr["success"]('Hey', msg, {'progressBar': true});
-                gameFinished = true;
-            }else {
-                makeBrokenOnMyBoard(e.index);
-                toastr["info"]('Opponent shot', "Cell " + getIndexName(e.index), {'progressBar': true});
-            }
-        });
+                let name = e.userLeft.name ? e.userLeft.name : "";
+                toastr["error"](`Player ${name} has left the room!`, 'Oh no!', {'progressBar': true});
+                $("#opponent-section").removeClass('d-flex').addClass('d-none');
+                $("#opponent-email").html("");
+                $("#opponent-name").html("");
+                $("#add-friend").addClass('d-none');
+                $("#join-link-section").removeClass('d-none').addClass('d-flex');
+            }).listen('.message-{{$authUser->id}}', (e) => {
+                appendMessage(e.message, 'black');
+                playSound("new-message");
+            }).listen('.opponent-ready-{{$authUser->id}}', (e) => {
+                toastr["success"]('Your opponent is ready to play!', 'Yeah', {'progressBar': true});
+            }).listen('.game-ready-{{$room->id}}', (e) => {
+                $('#actions-section').hide();
+                $('#join-link-section').removeClass('d-flex').addClass('d-none');
+                gameStarted = true;
+                toastr["success"]('You are all done. Lets play', 'Yeah', {'progressBar': true});
+            }).listen('.room-deleted-{{$authUser->id}}', (e) => {
+                toastr["error"]('Owner deleted this room', 'Oops!', {'progressBar': true});
+                setTimeout(function () {
+                    window.location.reload();
+                }, 3000);
+            }).listen('.fire-{{$authUser->id}}', (e) => {
+                if(e.index === 'win' || e.index === 'winner'){
+                    let msg = e.index === 'win' ? 'Sorry, you loose' : "Congratulations, You won!";
+                    toastr["success"]('Hey', msg, {'progressBar': true});
+                    gameFinished = true;
+                }else {
+                    makeBrokenOnMyBoard(e.index);
+                    toastr["info"]('Opponent shot', "Cell " + getIndexName(e.index), {'progressBar': true});
+                }
+            });
 
         let myFires = {!! auth()->id() == $room->owner_id ? $room->owner_fires : $room->opponent_fires !!};
         let opponentFires = {!! auth()->id() != $room->owner_id ? $room->owner_fires : $room->opponent_fires !!};

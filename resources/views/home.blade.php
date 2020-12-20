@@ -59,7 +59,9 @@
                                 Join to last game
                             </a>
                         @endif
-                        <a class="btn btn-info" href="{{route('play', ['force' => true])}}">Create new room</a>
+                        <a class="btn btn-info" href="{{route('play', ['force' => true])}}">
+                            Create new room
+                        </a>
                     </div>
                 </div>
                 <div class="card-footer">
