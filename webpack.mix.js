@@ -12,4 +12,7 @@ const mix = require('laravel-mix');
  */
 
 mix.js('resources/js/app.js', 'public/js')
+    .js('public/assets/js/init-toastr.js', 'public/js')
+    .js('public/assets/js/main.js', 'public/js')
+    .styles(['public/assets/css/main.css'], 'public/css/main.css')
     .sass('resources/sass/app.scss', 'public/css');

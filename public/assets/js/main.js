@@ -150,66 +150,67 @@ $(window).ready(function () {
             window.localStorage.setItem('healthyChecked_' + roomId, JSON.stringify(healthyChecked));
             window.localStorage.setItem('messages_' + roomId, '');
         }
+
         $('#chat-body').animate({
             scrollTop: $("#chat-body").find('span').last().offset().top
         }, 2000);
-}
 
-    let ownerCells = 'td[data-index!=""]';
+        let ownerCells = 'td[data-index!=""]';
 
-    $(ownerCells).on('mouseover', function () {
-        prepared = [];
-        $("td[data-used='false']").css('background', '#7bc4ff');
-        if (selected.count > 0) {
-            let index = $(this).data('index');
-            if (index != undefined) {
-                let row = index.split("-")[0];
-                let column = index.split("-")[1];
-                let goesOutside = checkIfGoesOutside(parseInt(row), parseInt(column));
-                let cellsUsed = checkIfCellsUsed(parseInt(row), parseInt(column));
-                let color = goesOutside === cellsUsed ? goesOutside : "red";
-                showInsertPlace(parseInt(row), parseInt(column), color);
-            }
-        }
-    });
-
-    $(ownerCells).on('click', function () {
-        if (prepared.length > 0) {
-            setShip();
-        } else {
-            if ($(this).attr('data-used') === 'true' && !gameStarted) {
-                resetShip($(this).data('ship'));
-            }
-        }
-    });
-
-    $('td[data-opponent!=""]').on('click', function () {
-        let clean = $(this).attr('data-clean');
-        if (typeof clean !== typeof undefined && clean !== false && clean !== "true") {
-            let coordinates = $(this).attr('data-opponent').split('-');
-            fire(coordinates[0], coordinates[1]);
-        }
-    });
-
-    $('td[data-opponent!=""]').contextmenu(function (event) {
-        let opponent = $(this).attr('data-opponent');
-        if (!$(this).hasClass('healthy') && !$(this).hasClass('wounded') && !$(this).hasClass('broken')) {
-            if (typeof opponent !== typeof undefined && opponent !== false && opponent !== "") {
-                event.preventDefault();
-                $(this).toggleClass('healthyChecked');
-                if ($(this).hasClass('healthyChecked')) {
-                    healthyChecked.push(opponent);
-                    window.localStorage.setItem('healthyChecked_' + roomId, JSON.stringify(healthyChecked));
-                } else {
-                    healthyChecked = healthyChecked.filter((healthyChecked) => healthyChecked !== opponent);
-                    window.localStorage.setItem('healthyChecked_' + roomId, JSON.stringify(healthyChecked));
+        $(ownerCells).on('mouseover', function () {
+            prepared = [];
+            $("td[data-used='false']").css('background', '#7bc4ff');
+            if (selected.count > 0) {
+                let index = $(this).data('index');
+                if (index != undefined) {
+                    let row = index.split("-")[0];
+                    let column = index.split("-")[1];
+                    let goesOutside = checkIfGoesOutside(parseInt(row), parseInt(column));
+                    let cellsUsed = checkIfCellsUsed(parseInt(row), parseInt(column));
+                    let color = goesOutside === cellsUsed ? goesOutside : "red";
+                    showInsertPlace(parseInt(row), parseInt(column), color);
                 }
             }
-        }
-    });
+        });
+
+        $(ownerCells).on('click', function () {
+            if (prepared.length > 0) {
+                setShip();
+            } else {
+                if ($(this).attr('data-used') === 'true' && !gameStarted) {
+                    resetShip($(this).data('ship'));
+                }
+            }
+        });
+
+        $('td[data-opponent!=""]').on('click', function () {
+            let clean = $(this).attr('data-clean');
+            if (typeof clean !== typeof undefined && clean !== false && clean !== "true") {
+                let coordinates = $(this).attr('data-opponent').split('-');
+                fire(coordinates[0], coordinates[1]);
+            }
+        });
+
+        $('td[data-opponent!=""]').contextmenu(function (event) {
+            let opponent = $(this).attr('data-opponent');
+            if (!$(this).hasClass('healthy') && !$(this).hasClass('wounded') && !$(this).hasClass('broken')) {
+                if (typeof opponent !== typeof undefined && opponent !== false && opponent !== "") {
+                    event.preventDefault();
+                    $(this).toggleClass('healthyChecked');
+                    if ($(this).hasClass('healthyChecked')) {
+                        healthyChecked.push(opponent);
+                        window.localStorage.setItem('healthyChecked_' + roomId, JSON.stringify(healthyChecked));
+                    } else {
+                        healthyChecked = healthyChecked.filter((healthyChecked) => healthyChecked !== opponent);
+                        window.localStorage.setItem('healthyChecked_' + roomId, JSON.stringify(healthyChecked));
+                    }
+                }
+            }
+        });
+    }
 });
 
-function showInsertPlace(row, column, color) {
+window.showInsertPlace = function(row, column, color) {
     let preparedTemp = [];
     if (orientation === "down") {
         for (let j = 0; j < selected.count; j++) {
@@ -235,9 +236,9 @@ function showInsertPlace(row, column, color) {
             prepared.push(preparedTemp[i])
         }
     }
-}
+};
 
-function checkIfGoesOutside(row, column) {
+window.checkIfGoesOutside = function(row, column) {
     let color = "#35a5ff";
     if (orientation === "down" && (parseInt(row) + selected.count - 1) > 10) {
         color = "red";
@@ -245,9 +246,9 @@ function checkIfGoesOutside(row, column) {
         color = "red";
     }
     return color;
-}
+};
 
-function checkIfCellsUsed(row, column) {
+window.checkIfCellsUsed = function(row, column) {
     let color = "#35a5ff";
     if (orientation === "down") {
         for (let i = 0; i < selected.count; i++) {
@@ -265,9 +266,9 @@ function checkIfCellsUsed(row, column) {
         }
     }
     return color;
-}
+};
 
-function choose(cellsNumber, id) {
+window.choose = function(cellsNumber, id) {
     let now = new Date().getTime() / 1000;
     let dif = now - chooseTime;
     if (dif > 1) {
@@ -298,21 +299,21 @@ function choose(cellsNumber, id) {
             }
         }
     }
-}
+};
 
-function setSelectedShip(cellsNumber, id) {
+window.setSelectedShip = function(cellsNumber, id) {
     selected.id = id;
     selected.count = cellsNumber;
     selected.orientation = orientation;
-}
+};
 
-function resetSelectedShip() {
+window.resetSelectedShip = function() {
     selected.id = "";
     selected.count = 0;
     selected.orientation = orientation;
-}
+};
 
-function setShip(formBackend = false) {
+window.setShip = function(formBackend = false) {
     let shipName = selected.id.split('-')[0];
     let shipIndex = parseInt(selected.id.split('-')[1]);
     for (let i = 0; i < prepared.length; i++) {
@@ -328,9 +329,9 @@ function setShip(formBackend = false) {
     if (isReady() && !formBackend) {
         updateShips();
     }
-}
+};
 
-function setAllShips() {
+window.setAllShips = function() {
     for (const [key, value] of Object.entries(ships)) {
         for (let i = 0; i < value.length; i++) {
             prepared = [];
@@ -343,9 +344,9 @@ function setAllShips() {
             setShip(true);
         }
     }
-}
+};
 
-function resetShip(ship) {
+window.resetShip = function(ship) {
     if (ship && gameStarted === false && setAndResetLoading === false) {
         setAndResetLoading = true;
         let shipName = ship.split('-')[0];
@@ -362,9 +363,9 @@ function resetShip(ship) {
         $("#" + ship).attr('data-used', 'false');
     }
     setAndResetLoading = false;
-}
+};
 
-function toggleNeighbours(index, block) {
+window.toggleNeighbours = function(index, block) {
     let row = index.split('-')[0];
     let col = index.split('-')[1];
     let indexes = [
@@ -385,9 +386,9 @@ function toggleNeighbours(index, block) {
             }
         }
     }
-}
+};
 
-function isReady() {
+window.isReady = function() {
     let ready = '';
     allShipsAreReady = [];
     for (const [key, value] of Object.entries(ships)) {
@@ -403,9 +404,9 @@ function isReady() {
         }
     }
     return ready.indexOf('0') === -1;
-}
+};
 
-function fire(x, y) {
+window.fire = function(x, y) {
     let checked = $(`[data-opponent='${x}-${y}']`).hasClass('healthyChecked') || $(`[data-opponent='${x}-${y}']`).hasClass('healthy') || $(`[data-opponent='${x}-${y}']`).hasClass('wounded') || $(`[data-opponent='${x}-${y}']`).hasClass('broken');
     if (gameStarted && !gameFinished && !checked) {
         $.ajax({
@@ -450,16 +451,16 @@ function fire(x, y) {
                 let doThis = checked ? '' : toastr["info"]("You and/or your opponent are not ready to play", 'Hey!', {'progressBar': true});
         }
     }
-}
+};
 
-function getIndexName(index) {
+window.getIndexName = function(index) {
     let letters = ['', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
     let indexNumber = parseInt(index.split('-')[0]);
     let letter = letters[indexNumber];
     return letter + '-' + index.split('-')[1];
-}
+};
 
-function makeBrokenOnMyBoard(index) {
+window.makeBrokenOnMyBoard = function(index) {
     let cell = $("td[data-index='" + index + "']")[0];
     let attr = $(cell).attr('data-ship');
     let isUsed = typeof attr !== typeof undefined && attr !== false;
@@ -470,9 +471,9 @@ function makeBrokenOnMyBoard(index) {
         $("td[data-index='" + index + "']").addClass('healthy');
         playSound("fire-nothing");
     }
-}
+};
 
-function showFires(fires, succeeds, board) {
+window.showFires = function(fires, succeeds, board) {
     for (let i = 0; i < fires.length; i++) {
         let cell = $("td[data-" + board + "='" + fires[i] + "']")[0];
         if (succeeds.indexOf(fires[i]) >= 0) {
@@ -481,9 +482,9 @@ function showFires(fires, succeeds, board) {
             $(cell).addClass('healthy');
         }
     }
-}
+};
 
-function copyLink(ev, anchor) {
+window.copyLink = function(ev, anchor) {
     ev.preventDefault();
     let $temp = $("<input>");
     $("body").append($temp);
@@ -491,43 +492,40 @@ function copyLink(ev, anchor) {
     document.execCommand("copy");
     $temp.remove();
     toastr["success"](`Yep!`, 'Link was copied', {'progressBar': true});
-}
+};
 
-function messageHandler() {
-    let message = $('#messageInput').val();
-    if (message && message.length > 0) {
-        appendMessage(message, 'white');
-        sendMessage(message);
-        $('#messageInput').val('');
+window.messageHandler = function(e = null) {
+    if (e === null || e.keyCode === 13) {
+        e.preventDefault();
+        let message = $('#messageInput').val();
+        if (message && message.length > 0) {
+            appendMessage(message, 'white');
+            sendMessage(message);
+            $('#messageInput').val('');
+        }
     }
-}
+};
 
-function appendMessage(message, color) {
+window.appendMessage = function(message, color) {
     $('#chat-body').append(`<span class="w-100 message" style="color: ${color}">${message}</span>`);
     let div = $('#chat-body')[0];
     div.scrollTop = div.scrollHeight;
     window.localStorage.setItem('messages_' + roomId, $('#chat-body').html());
-}
+};
 
-function playSound(id) {
+window.playSound = function(id) {
     if (volume === "on") {
         let audio = new Audio($('#' + id).attr('src'));
         audio.play();
     }
-}
+};
 
-function toggleBoard(el) {
+window.toggleBoard = function(el) {
     $(el).text($(el).text() === 'Hide my board' ? 'Show my board' : 'Hide my board');
     $('#owner').fadeToggle()
-}
+};
 
-function toggleSounds(el) {
+window.toggleSounds = function(el) {
     $(el).text($(el).text() === 'Turn off sounds' ? 'Turn on sounds' : 'Turn off sounds');
     volume = (volume === "on" ? "off" : "on");
-}
-
-$('#messageInput').on("keyup", function (event) {
-    if (event.keyCode === 13) {
-        messageHandler();
-    }
-});
+};
