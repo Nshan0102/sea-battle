@@ -79,7 +79,7 @@
                 @endif
             </div>
             <div class="row d-flex justify-content-around align-items-center m-3">
-                <div id="chat-body" class="row d-flex justify-content-center align-items-center"></div>
+                <div id="chat-body" class="row d-flex justify-content-center align-items-center"><span></span></div>
                 <input type="text" name="message" maxlength="200" id="messageInput" placeholder="Type your message">
                 <input type="button" id="messageButton" value="send" onclick="messageHandler()">
             </div>
