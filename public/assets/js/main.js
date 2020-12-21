@@ -1,12 +1,12 @@
-let roomId = 0;
-let orientation = "right";
-let prepared = [];
-let selected = {
+window.roomId = 0;
+window.orientationType = "right";
+window.prepared = [];
+window.selected = {
     id: "",
     count: 0,
     orientation: ""
 };
-let ships = {
+window.ships = {
     one: [
         [
             {
@@ -116,13 +116,14 @@ let ships = {
         ]
     ]
 };
-let allShipsAreReady = [];
-let gameStarted = false;
-let gameFinished = false;
-let setAndResetLoading = false;
-let chooseTime = new Date().getTime() / 1000;
-let volume = "on";
-let healthyChecked = [];
+window.allShipsAreReady = [];
+window.gameStarted = false;
+window.gameFinished = false;
+window.setAndResetLoading = false;
+window.chooseTime = new Date().getTime() / 1000;
+window.volume = "on";
+window.healthyChecked = [];
+window.shoting = false;
 
 $(window).ready(function () {
     $.ajaxSetup({
@@ -134,51 +135,51 @@ $(window).ready(function () {
     $(".orientation").on('click', function () {
         $(".orientation").removeClass('btn-primary');
         $(this).addClass('btn-primary');
-        orientation = $(this).data('orientation');
+        window.orientationType = $(this).data('orientation');
     });
 
-    if (roomId !== 0) {
-        let healthyCheckedCache = window.localStorage.getItem('healthyChecked_' + roomId);
-        let messagesCache = window.localStorage.getItem('messages_' + roomId);
+    if (window.roomId !== 0) {
+        let healthyCheckedCache = window.localStorage.getItem('healthyChecked_' + window.roomId);
+        let messagesCache = window.localStorage.getItem('messages_' + window.roomId);
         if (healthyCheckedCache && messagesCache) {
             $('#chat-body').html(messagesCache);
-            healthyChecked = JSON.parse(healthyCheckedCache);
-            for (let i = 0; i < healthyChecked.length; i++) {
-                $('[data-opponent="' + healthyChecked[i] + '"]').addClass('healthyChecked');
+            window.healthyChecked = JSON.parse(healthyCheckedCache);
+            for (let i = 0; i < window.healthyChecked.length; i++) {
+                $('[data-opponent="' + window.healthyChecked[i] + '"]').addClass('healthyChecked');
             }
         } else {
-            window.localStorage.setItem('healthyChecked_' + roomId, JSON.stringify(healthyChecked));
-            window.localStorage.setItem('messages_' + roomId, '');
+            window.localStorage.setItem('healthyChecked_' + window.roomId, JSON.stringify(window.healthyChecked));
+            window.localStorage.setItem('messages_' + window.roomId, '');
         }
 
         $('#chat-body').animate({
             scrollTop: $("#chat-body").find('span').last().offset().top
         }, 2000);
 
-        let ownerCells = 'td[data-index!=""]';
+        let ownerCells = 'td[data-index]';
 
         $(ownerCells).on('mouseover', function () {
-            prepared = [];
+            window.prepared = [];
             $("td[data-used='false']").css('background', '#7bc4ff');
-            if (selected.count > 0) {
+            if (window.selected.count > 0) {
                 let index = $(this).data('index');
                 if (index != undefined) {
                     let row = index.split("-")[0];
                     let column = index.split("-")[1];
-                    let goesOutside = checkIfGoesOutside(parseInt(row), parseInt(column));
-                    let cellsUsed = checkIfCellsUsed(parseInt(row), parseInt(column));
+                    let goesOutside = window.checkIfGoesOutside(parseInt(row), parseInt(column));
+                    let cellsUsed = window.checkIfCellsUsed(parseInt(row), parseInt(column));
                     let color = goesOutside === cellsUsed ? goesOutside : "red";
-                    showInsertPlace(parseInt(row), parseInt(column), color);
+                    window.showInsertPlace(parseInt(row), parseInt(column), color);
                 }
             }
         });
 
         $(ownerCells).on('click', function () {
-            if (prepared.length > 0) {
-                setShip();
+            if (window.prepared.length > 0) {
+                window.setShip();
             } else {
-                if ($(this).attr('data-used') === 'true' && !gameStarted) {
-                    resetShip($(this).data('ship'));
+                if ($(this).attr('data-used') === 'true' && !window.gameStarted) {
+                    window.resetShip($(this).data('ship'));
                 }
             }
         });
@@ -187,7 +188,7 @@ $(window).ready(function () {
             let clean = $(this).attr('data-clean');
             if (typeof clean !== typeof undefined && clean !== false && clean !== "true") {
                 let coordinates = $(this).attr('data-opponent').split('-');
-                fire(coordinates[0], coordinates[1]);
+                window.fire(coordinates[0], coordinates[1]);
             }
         });
 
@@ -198,11 +199,11 @@ $(window).ready(function () {
                     event.preventDefault();
                     $(this).toggleClass('healthyChecked');
                     if ($(this).hasClass('healthyChecked')) {
-                        healthyChecked.push(opponent);
-                        window.localStorage.setItem('healthyChecked_' + roomId, JSON.stringify(healthyChecked));
+                        window.healthyChecked.push(opponent);
+                        window.localStorage.setItem('healthyChecked_' + window.roomId, JSON.stringify(window.healthyChecked));
                     } else {
-                        healthyChecked = healthyChecked.filter((healthyChecked) => healthyChecked !== opponent);
-                        window.localStorage.setItem('healthyChecked_' + roomId, JSON.stringify(healthyChecked));
+                        window.healthyChecked = window.healthyChecked.filter((healthyChecked) => healthyChecked !== opponent);
+                        window.localStorage.setItem('healthyChecked_' + window.roomId, JSON.stringify(window.healthyChecked));
                     }
                 }
             }
@@ -212,8 +213,8 @@ $(window).ready(function () {
 
 window.showInsertPlace = function(row, column, color) {
     let preparedTemp = [];
-    if (orientation === "down") {
-        for (let j = 0; j < selected.count; j++) {
+    if (window.orientationType === "down") {
+        for (let j = 0; j < window.selected.count; j++) {
             let index = (parseInt(row) + j) + '-' + column;
             let used = $('td[data-index="' + index + '"]').attr('data-used');
             if (used == "false") {
@@ -221,8 +222,8 @@ window.showInsertPlace = function(row, column, color) {
             }
             preparedTemp.push(index);
         }
-    } else if (orientation === "right") {
-        for (let j = 0; j < selected.count; j++) {
+    } else if (window.orientationType === "right") {
+        for (let j = 0; j < window.selected.count; j++) {
             let index = row + '-' + (parseInt(column) + j);
             let used = $('td[data-index="' + index + '"]').attr('data-used');
             if (used == "false") {
@@ -233,16 +234,16 @@ window.showInsertPlace = function(row, column, color) {
     }
     if (color === "#35a5ff") {
         for (let i = 0; i < preparedTemp.length; i++) {
-            prepared.push(preparedTemp[i])
+            window.prepared.push(preparedTemp[i])
         }
     }
 };
 
 window.checkIfGoesOutside = function(row, column) {
     let color = "#35a5ff";
-    if (orientation === "down" && (parseInt(row) + selected.count - 1) > 10) {
+    if (window.orientationType === "down" && (parseInt(row) + window.selected.count - 1) > 10) {
         color = "red";
-    } else if (orientation === "right" && (parseInt(column) + selected.count - 1) > 10) {
+    } else if (window.orientationType === "right" && (parseInt(column) + window.selected.count - 1) > 10) {
         color = "red";
     }
     return color;
@@ -250,15 +251,15 @@ window.checkIfGoesOutside = function(row, column) {
 
 window.checkIfCellsUsed = function(row, column) {
     let color = "#35a5ff";
-    if (orientation === "down") {
-        for (let i = 0; i < selected.count; i++) {
+    if (window.orientationType === "down") {
+        for (let i = 0; i < window.selected.count; i++) {
             let used = $('td[data-index="' + (parseInt(row) + i) + '-' + column + '"]').attr('data-used');
             if (used == "true") {
                 color = "red";
             }
         }
-    } else if (orientation === "right") {
-        for (let i = 0; i < selected.count; i++) {
+    } else if (window.orientationType === "right") {
+        for (let i = 0; i < window.selected.count; i++) {
             let used = $('td[data-index="' + row + '-' + (parseInt(column) + i) + '"]').attr('data-used');
             if (used == "true") {
                 color = "red";
@@ -270,99 +271,99 @@ window.checkIfCellsUsed = function(row, column) {
 
 window.choose = function(cellsNumber, id) {
     let now = new Date().getTime() / 1000;
-    let dif = now - chooseTime;
+    let dif = now - window.chooseTime;
     if (dif > 1) {
-        chooseTime = new Date().getTime() / 1000;
+        window.chooseTime = new Date().getTime() / 1000;
         let alreadyUsed = $("#" + id).attr('data-used');
         if (alreadyUsed === "true") {
             $("#" + id).removeClass('broken');
             $("td[data-used='false']").css('background', '#7bc4ff');
             $("#" + id).data('used', 'false');
-            resetShip(id);
-            resetSelectedShip();
+            window.resetShip(id);
+            window.resetSelectedShip();
         } else {
-            if (id !== selected.id) {
-                if (selected.id != "") {
-                    $("#" + selected.id).removeClass('broken');
+            if (id !== window.selected.id) {
+                if (window.selected.id != "") {
+                    $("#" + window.selected.id).removeClass('broken');
                     $("td[data-used='false']").css('background', '#7bc4ff');
-                    $("#" + selected.id).attr('data-used', 'false');
-                    resetSelectedShip();
+                    $("#" + window.selected.id).attr('data-used', 'false');
+                    window.resetSelectedShip();
                 }
                 $("#" + id).addClass('broken');
-                setSelectedShip(cellsNumber, id);
+                window.setSelectedShip(cellsNumber, id);
                 $("#" + id).attr('data-used', 'true');
             } else {
                 $("#" + id).removeClass('broken');
                 $("td[data-used='false']").css('background', '#7bc4ff');
                 $("#" + id).data('used', 'false');
-                resetSelectedShip();
+                window.resetSelectedShip();
             }
         }
     }
 };
 
 window.setSelectedShip = function(cellsNumber, id) {
-    selected.id = id;
-    selected.count = cellsNumber;
-    selected.orientation = orientation;
+    window.selected.id = id;
+    window.selected.count = cellsNumber;
+    window.selected.orientation = window.orientationType;
 };
 
 window.resetSelectedShip = function() {
-    selected.id = "";
-    selected.count = 0;
-    selected.orientation = orientation;
+    window.selected.id = "";
+    window.selected.count = 0;
+    window.selected.orientation = window.orientationType;
 };
 
 window.setShip = function(formBackend = false) {
-    let shipName = selected.id.split('-')[0];
-    let shipIndex = parseInt(selected.id.split('-')[1]);
-    for (let i = 0; i < prepared.length; i++) {
-        ships[shipName][shipIndex][i]['index'] = prepared[i];
-        toggleNeighbours(prepared[i], 'true');
-        $('td[data-index="' + prepared[i] + '"]').css('background', '#35a5ff');
-        $('td[data-index="' + prepared[i] + '"]').html('<i class="fas fa-anchor" style="color: #796046"></i>');
-        $('td[data-index="' + prepared[i] + '"]').attr('data-used', 'true');
-        $('td[data-index="' + prepared[i] + '"]').attr('data-ship', selected.id);
+    let shipName = window.selected.id.split('-')[0];
+    let shipIndex = parseInt(window.selected.id.split('-')[1]);
+    for (let i = 0; i < window.prepared.length; i++) {
+        window.ships[shipName][shipIndex][i]['index'] = window.prepared[i];
+        window.toggleNeighbours(window.prepared[i], 'true');
+        $('td[data-index="' + window.prepared[i] + '"]').css('background', '#35a5ff');
+        $('td[data-index="' + window.prepared[i] + '"]').html('<i class="fas fa-anchor" style="color: #796046"></i>');
+        $('td[data-index="' + window.prepared[i] + '"]').attr('data-used', 'true');
+        $('td[data-index="' + window.prepared[i] + '"]').attr('data-ship', window.selected.id);
     }
-    prepared = [];
-    resetSelectedShip();
-    if (isReady() && !formBackend) {
-        updateShips();
+    window.prepared = [];
+    window.resetSelectedShip();
+    if (window.isReady() && !formBackend) {
+        window.updateShips();
     }
 };
 
 window.setAllShips = function() {
-    for (const [key, value] of Object.entries(ships)) {
+    for (const [key, value] of Object.entries(window.ships)) {
         for (let i = 0; i < value.length; i++) {
-            prepared = [];
-            selected.id = key + '-' + i;
+            window.prepared = [];
+            window.selected.id = key + '-' + i;
             $('#' + key + '-' + i).attr('data-used', 'true');
             $('#' + key + '-' + i).addClass('broken');
             for (let j = 0; j < value[i].length; j++) {
-                prepared.push(value[i][j]['index']);
+                window.prepared.push(value[i][j]['index']);
             }
-            setShip(true);
+            window.setShip(true);
         }
     }
 };
 
 window.resetShip = function(ship) {
-    if (ship && gameStarted === false && setAndResetLoading === false) {
-        setAndResetLoading = true;
+    if (ship && window.gameStarted === false && window.setAndResetLoading === false) {
+        window.setAndResetLoading = true;
         let shipName = ship.split('-')[0];
         let shipIndex = parseInt(ship.split('-')[1]);
-        for (let i = 0; i < ships[shipName][shipIndex].length; i++) {
-            toggleNeighbours(ships[shipName][shipIndex][i]['index'], 'false');
-            $('td[data-index="' + ships[shipName][shipIndex][i]['index'] + '"]').css('background', '#7bc4ff');
-            $('td[data-index="' + ships[shipName][shipIndex][i]['index'] + '"]').html('');
-            $('td[data-index="' + ships[shipName][shipIndex][i]['index'] + '"]').attr('data-used', 'false');
-            $('td[data-index="' + ships[shipName][shipIndex][i]['index'] + '"]').removeAttr('data-ship');
-            ships[shipName][shipIndex][i]['index'] = "";
+        for (let i = 0; i < window.ships[shipName][shipIndex].length; i++) {
+            window.toggleNeighbours(window.ships[shipName][shipIndex][i]['index'], 'false');
+            $('td[data-index="' + window.ships[shipName][shipIndex][i]['index'] + '"]').css('background', '#7bc4ff');
+            $('td[data-index="' + window.ships[shipName][shipIndex][i]['index'] + '"]').html('');
+            $('td[data-index="' + window.ships[shipName][shipIndex][i]['index'] + '"]').attr('data-used', 'false');
+            $('td[data-index="' + window.ships[shipName][shipIndex][i]['index'] + '"]').removeAttr('data-ship');
+            window.ships[shipName][shipIndex][i]['index'] = "";
         }
         $("#" + ship).removeClass('broken');
         $("#" + ship).attr('data-used', 'false');
     }
-    setAndResetLoading = false;
+    window.setAndResetLoading = false;
 };
 
 window.toggleNeighbours = function(index, block) {
@@ -390,13 +391,13 @@ window.toggleNeighbours = function(index, block) {
 
 window.isReady = function() {
     let ready = '';
-    allShipsAreReady = [];
-    for (const [key, value] of Object.entries(ships)) {
+    window.allShipsAreReady = [];
+    for (const [key, value] of Object.entries(window.ships)) {
         for (let i = 0; i < value.length; i++) {
             for (let j = 0; j < value[i].length; j++) {
                 if (value[i][j]['index'] !== "") {
                     ready += "1";
-                    allShipsAreReady.push(value[i][j]['index']);
+                    window.allShipsAreReady.push(value[i][j]['index']);
                 } else {
                     ready += "0";
                 }
@@ -408,7 +409,8 @@ window.isReady = function() {
 
 window.fire = function(x, y) {
     let checked = $(`[data-opponent='${x}-${y}']`).hasClass('healthyChecked') || $(`[data-opponent='${x}-${y}']`).hasClass('healthy') || $(`[data-opponent='${x}-${y}']`).hasClass('wounded') || $(`[data-opponent='${x}-${y}']`).hasClass('broken');
-    if (gameStarted && !gameFinished && !checked) {
+    if (window.gameStarted && !window.gameFinished && !checked && !window.shoting) {
+        window.shoting = true;
         $.ajax({
             type: 'POST',
             url: $('#fire_url').val(),
@@ -419,7 +421,7 @@ window.fire = function(x, y) {
             },
             success: function (res) {
                 if (res.status === 'success') {
-                    playSound("fire-shot");
+                    window.playSound("fire-shot");
                     $("td[data-opponent='" + x + "-" + y + "']").addClass('wounded');
                     $(this).attr('data-clean', 'true');
                     if (res.ship.length > 0) {
@@ -428,11 +430,12 @@ window.fire = function(x, y) {
                         }
                     }
                 } else if (res.status === 'empty') {
-                    playSound("fire-nothing");
+                    window.playSound("fire-nothing");
                     $("td[data-opponent='" + x + "-" + y + "']").addClass('healthy');
                     $(this).attr('data-clean', 'true');
                 }
                 toastr["info"](res.message, '', {'progressBar': true});
+                window.shoting = false;
             },
             error: function (xhr, status, error) {
                 let message = 'Oops! Something went wrong';
@@ -440,15 +443,16 @@ window.fire = function(x, y) {
                     message = xhr.responseJSON.error;
                 }
                 toastr["error"](message, 'Oops!', {'progressBar': true});
+                window.shoting = false;
             }
         });
     } else {
-        switch (gameFinished) {
-            case true:
-                toastr["info"]("The game has finished", 'Hey!', {'progressBar': true});
-                break;
-            default:
-                let doThis = checked ? '' : toastr["info"]("You and/or your opponent are not ready to play", 'Hey!', {'progressBar': true});
+        if (window.gameFinished === true) {
+            toastr["info"]("The game has finished", 'Hey!', {'progressBar': true});
+        } else if(window.shoting === true){
+            toastr["error"]("Take your time, I can't keep up with you", 'Hey!', {'progressBar': true});
+        } else {
+            let doThis = checked ? '' : toastr["info"]("You and/or your opponent are not ready to play", 'Hey!', {'progressBar': true});
         }
     }
 };
@@ -466,10 +470,10 @@ window.makeBrokenOnMyBoard = function(index) {
     let isUsed = typeof attr !== typeof undefined && attr !== false;
     if (isUsed === true) {
         $("td[data-index='" + index + "']").addClass('broken');
-        playSound("fire-shot");
+        window.playSound("fire-shot");
     } else {
         $("td[data-index='" + index + "']").addClass('healthy');
-        playSound("fire-nothing");
+        window.playSound("fire-nothing");
     }
 };
 
@@ -496,11 +500,10 @@ window.copyLink = function(ev, anchor) {
 
 window.messageHandler = function(e = null) {
     if (e === null || e.keyCode === 13) {
-        e.preventDefault();
         let message = $('#messageInput').val();
         if (message && message.length > 0) {
-            appendMessage(message, 'white');
-            sendMessage(message);
+            window.appendMessage(message, 'white');
+            window.sendMessage(message);
             $('#messageInput').val('');
         }
     }
@@ -510,11 +513,11 @@ window.appendMessage = function(message, color) {
     $('#chat-body').append(`<span class="w-100 message" style="color: ${color}">${message}</span>`);
     let div = $('#chat-body')[0];
     div.scrollTop = div.scrollHeight;
-    window.localStorage.setItem('messages_' + roomId, $('#chat-body').html());
+    window.localStorage.setItem('messages_' + window.roomId, $('#chat-body').html());
 };
 
 window.playSound = function(id) {
-    if (volume === "on") {
+    if (window.volume === "on") {
         let audio = new Audio($('#' + id).attr('src'));
         audio.play();
     }
@@ -527,5 +530,5 @@ window.toggleBoard = function(el) {
 
 window.toggleSounds = function(el) {
     $(el).text($(el).text() === 'Turn off sounds' ? 'Turn on sounds' : 'Turn off sounds');
-    volume = (volume === "on" ? "off" : "on");
+    window.volume = (window.volume === "on" ? "off" : "on");
 };

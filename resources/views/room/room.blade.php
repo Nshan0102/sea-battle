@@ -17,47 +17,47 @@
                         </div>
                     </div>
                     <div class="mb-3 mr-3">
-                        <button class="btn btn-success" data-used="false" onclick="choose(1, 'one-0')" id="one-0">
+                        <button class="btn btn-success" data-used="false" onclick="window.choose(1, 'one-0')" id="one-0">
                             <i class="fas fa-ship"></i>
                         </button>
-                        <button class="btn btn-success" data-used="false" onclick="choose(1, 'one-1')" id="one-1">
+                        <button class="btn btn-success" data-used="false" onclick="window.choose(1, 'one-1')" id="one-1">
                             <i class="fas fa-ship"></i>
                         </button>
-                        <button class="btn btn-success" data-used="false" onclick="choose(1, 'one-2')" id="one-2">
+                        <button class="btn btn-success" data-used="false" onclick="window.choose(1, 'one-2')" id="one-2">
                             <i class="fas fa-ship"></i>
                         </button>
-                        <button class="btn btn-success" data-used="false" onclick="choose(1, 'one-3')" id="one-3">
-                            <i class="fas fa-ship"></i>
-                        </button>
-                    </div>
-                    <div class="mb-3 mr-3">
-                        <button class="btn btn-success" data-used="false" onclick="choose(2, 'two-0')" id="two-0">
-                            <i class="fas fa-ship"></i>
-                            <i class="fas fa-ship"></i>
-                        </button>
-                        <button class="btn btn-success" data-used="false" onclick="choose(2, 'two-1')" id="two-1">
-                            <i class="fas fa-ship"></i>
-                            <i class="fas fa-ship"></i>
-                        </button>
-                        <button class="btn btn-success" data-used="false" onclick="choose(2, 'two-2')" id="two-2">
-                            <i class="fas fa-ship"></i>
+                        <button class="btn btn-success" data-used="false" onclick="window.choose(1, 'one-3')" id="one-3">
                             <i class="fas fa-ship"></i>
                         </button>
                     </div>
                     <div class="mb-3 mr-3">
-                        <button class="btn btn-success" data-used="false" onclick="choose(3, 'three-0')" id="three-0">
-                            <i class="fas fa-ship"></i>
+                        <button class="btn btn-success" data-used="false" onclick="window.choose(2, 'two-0')" id="two-0">
                             <i class="fas fa-ship"></i>
                             <i class="fas fa-ship"></i>
                         </button>
-                        <button class="btn btn-success" data-used="false" onclick="choose(3, 'three-1')" id="three-1">
+                        <button class="btn btn-success" data-used="false" onclick="window.choose(2, 'two-1')" id="two-1">
                             <i class="fas fa-ship"></i>
+                            <i class="fas fa-ship"></i>
+                        </button>
+                        <button class="btn btn-success" data-used="false" onclick="window.choose(2, 'two-2')" id="two-2">
                             <i class="fas fa-ship"></i>
                             <i class="fas fa-ship"></i>
                         </button>
                     </div>
                     <div class="mb-3 mr-3">
-                        <button class="btn btn-success" data-used="false" onclick="choose(4, 'four-0')" id="four-0">
+                        <button class="btn btn-success" data-used="false" onclick="window.choose(3, 'three-0')" id="three-0">
+                            <i class="fas fa-ship"></i>
+                            <i class="fas fa-ship"></i>
+                            <i class="fas fa-ship"></i>
+                        </button>
+                        <button class="btn btn-success" data-used="false" onclick="window.choose(3, 'three-1')" id="three-1">
+                            <i class="fas fa-ship"></i>
+                            <i class="fas fa-ship"></i>
+                            <i class="fas fa-ship"></i>
+                        </button>
+                    </div>
+                    <div class="mb-3 mr-3">
+                        <button class="btn btn-success" data-used="false" onclick="window.choose(4, 'four-0')" id="four-0">
                             <i class="fas fa-ship"></i>
                             <i class="fas fa-ship"></i>
                             <i class="fas fa-ship"></i>
@@ -73,24 +73,24 @@
             <div id="join-link-section" class="row d-flex justify-content-around align-items-center m-3">
                 @if($room->owner->id == $authUser->id && !$room->opponent)
                     <a title="Send this link to your friend (click to copy)"
-                       href="{{route('join', $room)}}" onclick="copyLink(event, this)">
+                       href="{{route('join', $room)}}" onclick="window.copyLink(event, this)">
                         <h5 class="join-link">{{route('join', $room)}}</h5>
                     </a>
                 @endif
             </div>
             <div class="row d-flex justify-content-around align-items-center m-3">
                 <div id="chat-body" class="row d-flex justify-content-center align-items-center"><span></span></div>
-                <input type="text" onkeyup="messageHandler(event)" name="message" maxlength="200" id="messageInput" placeholder="Type your message">
-                <input type="button" id="messageButton" value="send" onclick="messageHandler()">
+                <input type="text" onkeyup="window.messageHandler(event)" name="message" maxlength="200" id="messageInput" placeholder="Type your message">
+                <input type="button" id="messageButton" value="send" onclick="window.messageHandler(null)">
             </div>
             <div class="row d-flex justify-content-around align-items-center">
                 <div id="auth-section" class="d-flex justify-content-start align-items-center flex-column">
                     <h4>{{$authUser->name}}</h4>
                     ({{$authUser->email}})
                     <div class="d-flex justify-content-around align-items-center w-100">
-                        <a href="javascript:void(0)" onclick="toggleBoard(this)">Hide my board</a>
+                        <a href="javascript:void(0)" onclick="window.toggleBoard(this)">Hide my board</a>
                         <span class="pl-2 pr-2"> / </span>
-                        <a href="javascript:void(0)" onclick="toggleSounds(this)">Turn off sounds</a>
+                        <a href="javascript:void(0)" onclick="window.toggleSounds(this)">Turn off sounds</a>
                     </div>
                     <table id="owner">
                         <tr>
@@ -450,14 +450,14 @@
                 $("#add-friend").addClass('d-none');
                 $("#join-link-section").removeClass('d-none').addClass('d-flex');
             }).listen('.message-{{$authUser->id}}', (e) => {
-                appendMessage(e.message, 'black');
-                playSound("new-message");
+                window.appendMessage(e.message, 'black');
+                window.playSound("new-message");
             }).listen('.opponent-ready-{{$authUser->id}}', (e) => {
                 toastr["success"]('Your opponent is ready to play!', 'Yeah', {'progressBar': true});
             }).listen('.game-ready-{{$room->id}}', (e) => {
                 $('#actions-section').hide();
                 $('#join-link-section').removeClass('d-flex').addClass('d-none');
-                gameStarted = true;
+                window.gameStarted = true;
                 toastr["success"]('You are all done. Lets play', 'Yeah', {'progressBar': true});
             }).listen('.room-deleted-{{$authUser->id}}', (e) => {
                 toastr["error"]('Owner deleted this room', 'Oops!', {'progressBar': true});
@@ -468,20 +468,20 @@
                 if(e.index === 'win' || e.index === 'winner'){
                     let msg = e.index === 'win' ? 'Sorry, you loose' : "Congratulations, You won!";
                     toastr["success"]('Hey', msg, {'progressBar': true});
-                    gameFinished = true;
+                    window.gameFinished = true;
                 }else {
-                    makeBrokenOnMyBoard(e.index);
-                    toastr["info"]('Opponent shot', "Cell " + getIndexName(e.index), {'progressBar': true});
+                    window.makeBrokenOnMyBoard(e.index);
+                    toastr["info"]('Opponent shot', "Cell " + window.getIndexName(e.index), {'progressBar': true});
                 }
             });
 
-        let myFires = {!! auth()->id() == $room->owner_id ? $room->owner_fires : $room->opponent_fires !!};
-        let opponentFires = {!! auth()->id() != $room->owner_id ? $room->owner_fires : $room->opponent_fires !!};
-        let mySucceeds = {!! auth()->id() == $room->owner_id ? $room->owner_succeeds : $room->opponent_succeeds !!};
-        let opponentSucceeds = {!! auth()->id() != $room->owner_id ? $room->owner_succeeds : $room->opponent_succeeds !!};
+        window.myFires = {!! auth()->id() == $room->owner_id ? $room->owner_fires : $room->opponent_fires !!};
+        window.opponentFires = {!! auth()->id() != $room->owner_id ? $room->owner_fires : $room->opponent_fires !!};
+        window.mySucceeds = {!! auth()->id() == $room->owner_id ? $room->owner_succeeds : $room->opponent_succeeds !!};
+        window.opponentSucceeds = {!! auth()->id() != $room->owner_id ? $room->owner_succeeds : $room->opponent_succeeds !!};
 
         @if($room->ready)
-            gameStarted = true;
+            window.gameStarted = true;
         @endif
 
         $(window).ready(function () {
@@ -491,28 +491,28 @@
                 dataType: 'JSON',
                 success: function (res) {
                     if (res.ships) {
-                        ships = res.ships;
-                        setAllShips();
+                        window.ships = res.ships;
+                        window.setAllShips();
                     }
                 },
                 error: function (error) {
                     toastr["error"]('Error', 'Oops! Something went wrong', {'progressBar': true});
                 },
             });
-            showFires(myFires, mySucceeds, 'opponent');
-            showFires(opponentFires, opponentSucceeds, 'index');
+            window.showFires(window.myFires, window.mySucceeds, 'opponent');
+            window.showFires(window.opponentFires, window.opponentSucceeds, 'index');
         });
 
-        function updateShips() {
+        window.updateShips = function() {
             $.ajax({
                 type: 'PUT',
                 url: $('#room_update_url').val(),
                 dataType: 'JSON',
                 data: {
                     @if($authUser->id == $room->owner->id)
-                    owner_ships: ships,
+                    owner_ships: window.ships,
                     @elseif($authUser->id == $room->opponent->id)
-                    opponent_ships: ships,
+                    opponent_ships: window.ships,
                     @endif
                 },
                 success: function (res) {
@@ -526,9 +526,9 @@
                     toastr["error"](message, 'Oops!', {'progressBar': true});
                 }
             });
-        }
+        };
 
-        function sendMessage(message) {
+        window.sendMessage = function(message) {
             $.ajax({
                 type: 'POST',
                 url: "{{route('message', $room)}}",
@@ -546,6 +546,6 @@
                     toastr["error"](message, 'Oops!', {'progressBar': true});
                 }
             });
-        }
+        };
     </script>
 @endpush
