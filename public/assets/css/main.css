@@ -65,6 +65,8 @@ td {
     padding-left: 10px;
     background: aliceblue;
     width: 80%;
+    resize: none;
+    height: 28px !important;
 }
 
 #messageButton {
