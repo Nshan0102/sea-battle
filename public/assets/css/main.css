@@ -64,12 +64,24 @@ td {
     border-bottom-left-radius: 10px;
     padding-left: 10px;
     background: aliceblue;
-    width: 80%;
+    width: 70%;
+    resize: none;
+    height: 28px !important;
 }
 
 #messageButton {
     border: 1px solid #adc9df;
     background: #a5b7c5;
     border-bottom-right-radius: 10px;
-    width: 20%;
+    width: 15%;
+}
+
+#emoji-button {
+    border: 1px solid #adc9df;
+    background: #f0f8ff;
+    width: 15%;
+}
+
+#emoji-button, #messageButton, #messageInput {
+    outline: none !important;
 }
