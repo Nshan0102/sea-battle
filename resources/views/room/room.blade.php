@@ -81,7 +81,7 @@
             <div class="row d-flex justify-content-around align-items-center m-3">
                 <div id="chat-body" class="row d-flex justify-content-center align-items-center"><span></span></div>
                 <input name="message" id="messageInput" placeholder="Type your message">
-                <button id="emoji-button"></button>
+                <input type="button" id="emoji-button" value=" 😀 ">
                 <input type="button" id="messageButton" value="send" onclick="messageHandler()">
             </div>
             <div class="row d-flex justify-content-around align-items-center">
@@ -558,7 +558,7 @@
         window.addEventListener('DOMContentLoaded', () => {
             const button = document.querySelector('#emoji-button');
             picker.on('emoji', emoji => {
-                document.querySelector('#messageInput').value += ' ' + emoji + ' ';
+                document.querySelector('#messageInput').value += ' ' + emoji.emoji + ' ';
             });
 
             button.addEventListener('click', () => {

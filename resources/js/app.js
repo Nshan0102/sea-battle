@@ -42,6 +42,9 @@ window.Echo = new Echo({
     encrypted: true
 });
 window.picker = new EmojiButton({
+    autoHide: false,
+});
+/*window.picker = new EmojiButton({
 
     // position of the emoji picker. Available positions:
     // auto-start, auto-end, top, top-start, top-end, right, right-start, right-end, bottom, bottom-start, bottom-end, left, left-start, left-end
@@ -142,4 +145,4 @@ window.picker = new EmojiButton({
         notFound: 'No emojis found'
     }
 
-});
+});*/
