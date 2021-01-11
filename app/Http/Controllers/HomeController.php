@@ -26,4 +26,11 @@ class HomeController extends Controller
         $user = auth()->user();
         return view('home')->with(['user' => $user]);
     }
+
+    public function seaBattleTeam()
+    {
+
+        return view('team');
+    }
+
 }
