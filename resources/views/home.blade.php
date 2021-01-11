@@ -44,12 +44,13 @@
                             </li>
                         </ul>
                     </div>
+                    @if (session('status'))
+                        <div class="alert alert-success" role="alert">
+                            {{ session('status') }}
+                        </div>
+                    @endif
                     <div class="d-flex flex-row justify-content-around align-items-center">
-                        @if (session('status'))
-                            <div class="alert alert-success" role="alert">
-                                {{ session('status') }}
-                            </div>
-                        @endif
+
                         @if($user->ownerRoom)
                             <a class="btn btn-primary" href="{{route('enter-the-room', $user->ownerRoom)}}">
                                 Join to last game
@@ -59,7 +60,7 @@
                                 Join to last game
                             </a>
                         @endif
-                        <a class="btn btn-info" href="{{route('play', ['force' => true])}}">
+                        <a class="btn btn-info ml-1" href="{{route('play', ['force' => true])}}">
                             Create new room
                         </a>
                     </div>
@@ -67,7 +68,7 @@
                 <div class="card-footer">
                     <div class="d-flex flex-row justify-content-around align-items-center">
                         Made for fun <br>
-                        <a href="https://www.facebook.com/Nshan0102/">Nshan Vardanyan</a>
+                        <a href="{{route('sea-battle-team')}}">Sea Battle Team</a>
                     </div>
                 </div>
             </div>
