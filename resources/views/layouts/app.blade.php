@@ -69,7 +69,7 @@
                             </li>
                             <li class="nav-item">
                                 <i class="fas fa-users icon"></i>
-                                <a class="nav-link" >Sea Battle Team</a>
+                                <a class="nav-link" href="{{ route('sea-battle-team') }}" >Sea Battle Team</a>
                             </li>
                             <li class="nav-item">
                                 <i class="fas fa-sign-out-alt icon"></i>
