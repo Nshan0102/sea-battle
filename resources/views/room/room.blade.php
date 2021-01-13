@@ -79,8 +79,9 @@
                 @endif
             </div>
             <div class="row d-flex justify-content-around align-items-center m-3">
-                <div id="chat-body" class="row d-flex justify-content-center align-items-center"></div>
-                <input type="text" name="message" maxlength="200" id="messageInput" placeholder="Type your message">
+                <div id="chat-body" class="row d-flex justify-content-center align-items-center"><span></span></div>
+                <input name="message" id="messageInput" placeholder="Type your message">
+                <input type="button" id="emoji-button" value=" 😀 ">
                 <input type="button" id="messageButton" value="send" onclick="messageHandler()">
             </div>
             <div class="row d-flex justify-content-around align-items-center">
@@ -428,6 +429,10 @@
         <audio id="fire-shot" src="{{asset('assets/sounds/fire-shot.mp3')}}"></audio>
     </div>
 @endsection
+@push('head-scripts')
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/emojify.js/1.1.0/css/basic/emojify.min.css" />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/emojify.js/1.1.0/js/emojify.min.js"></script>
+@endpush
 @push('js')
     <script src="{{asset('js/events.js')}}"></script>
     <script>
@@ -548,5 +553,17 @@
                 }
             });
         }
+    </script>
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const button = document.querySelector('#emoji-button');
+            picker.on('emoji', emoji => {
+                document.querySelector('#messageInput').value += ' ' + emoji.emoji + ' ';
+            });
+
+            button.addEventListener('click', () => {
+                picker.pickerVisible ? picker.hidePicker() : picker.showPicker(button);
+            });
+        });
     </script>
 @endpush

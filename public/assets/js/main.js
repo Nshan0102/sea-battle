@@ -137,20 +137,23 @@ $(window).ready(function () {
         orientation = $(this).data('orientation');
     });
 
-    if (roomId !== 0){
-        let healthyCheckedCache = localStorage.getItem('healthyChecked_' + roomId);
-        let messagesCache = localStorage.getItem('messages_' + roomId);
-        if (healthyCheckedCache && messagesCache){
+    if (roomId !== 0) {
+        let healthyCheckedCache = window.localStorage.getItem('healthyChecked_' + roomId);
+        let messagesCache = window.localStorage.getItem('messages_' + roomId);
+        if (healthyCheckedCache && messagesCache) {
             $('#chat-body').html(messagesCache);
             healthyChecked = JSON.parse(healthyCheckedCache);
-            for (let i = 0; i < healthyChecked.length; i++){
-                $('[data-opponent="'+ healthyChecked[i] + '"]').addClass('healthyChecked');
+            for (let i = 0; i < healthyChecked.length; i++) {
+                $('[data-opponent="' + healthyChecked[i] + '"]').addClass('healthyChecked');
             }
-        }else{
-            localStorage.setItem('healthyChecked_' + roomId, JSON.stringify(healthyChecked));
-            localStorage.setItem('messages_' + roomId, '');
+        } else {
+            window.localStorage.setItem('healthyChecked_' + roomId, JSON.stringify(healthyChecked));
+            window.localStorage.setItem('messages_' + roomId, '');
         }
-    }
+        $('#chat-body').animate({
+            scrollTop: $("#chat-body").find('span').last().offset().top
+        }, 2000);
+}
 
     let ownerCells = 'td[data-index!=""]';
 
@@ -190,16 +193,16 @@ $(window).ready(function () {
 
     $('td[data-opponent!=""]').contextmenu(function (event) {
         let opponent = $(this).attr('data-opponent');
-        if (!$(this).hasClass('healthy') && !$(this).hasClass('wounded') && !$(this).hasClass('broken')){
+        if (!$(this).hasClass('healthy') && !$(this).hasClass('wounded') && !$(this).hasClass('broken')) {
             if (typeof opponent !== typeof undefined && opponent !== false && opponent !== "") {
                 event.preventDefault();
                 $(this).toggleClass('healthyChecked');
-                if ($(this).hasClass('healthyChecked')){
+                if ($(this).hasClass('healthyChecked')) {
                     healthyChecked.push(opponent);
-                    localStorage.setItem('healthyChecked_' + roomId, JSON.stringify(healthyChecked));
-                }else{
+                    window.localStorage.setItem('healthyChecked_' + roomId, JSON.stringify(healthyChecked));
+                } else {
                     healthyChecked = healthyChecked.filter((healthyChecked) => healthyChecked !== opponent);
-                    localStorage.setItem('healthyChecked_' + roomId, JSON.stringify(healthyChecked));
+                    window.localStorage.setItem('healthyChecked_' + roomId, JSON.stringify(healthyChecked));
                 }
             }
         }
@@ -444,7 +447,7 @@ function fire(x, y) {
                 toastr["info"]("The game has finished", 'Hey!', {'progressBar': true});
                 break;
             default:
-                let doThis = checked  ? '' : toastr["info"]("You and/or your opponent are not ready to play", 'Hey!', {'progressBar': true});
+                let doThis = checked ? '' : toastr["info"]("You and/or your opponent are not ready to play", 'Hey!', {'progressBar': true});
         }
     }
 }
@@ -503,11 +506,11 @@ function appendMessage(message, color) {
     $('#chat-body').append(`<span class="w-100 message" style="color: ${color}">${message}</span>`);
     let div = $('#chat-body')[0];
     div.scrollTop = div.scrollHeight;
-    localStorage.setItem('messages_' + roomId, $('#chat-body').html());
+    window.localStorage.setItem('messages_' + roomId, $('#chat-body').html());
 }
 
 function playSound(id) {
-    if (volume === "on"){
+    if (volume === "on") {
         let audio = new Audio($('#' + id).attr('src'));
         audio.play();
     }

@@ -38,6 +38,8 @@ Route::middleware('auth')->group(function (){
     Route::post('/fire/{room}', 'RoomController@fire')->name('fire');
 
     Route::post('/message/{room}', 'RoomController@message')->name('message');
+
+    Route::get('/sea-battle-team', 'HomeController@seaBattleTeam')->name('sea-battle-team');
 });
 
 
