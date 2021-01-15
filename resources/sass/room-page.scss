@@ -1,3 +1,16 @@
 #room-page {
     height: calc(100vh - 56px);
 }
+
+#actions-section {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+#actions-section > div {
+    justify-content: space-around;
+    align-items: center;
+}

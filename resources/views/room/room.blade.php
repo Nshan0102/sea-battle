@@ -3,8 +3,8 @@
     <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
         <div id="actions-section" class="container">
             @if(!$room->ready)
-                <div class="row d-flex justify-content-center mb-2 width-100">
-                    <div class="d-flex justify-content-center align-items-center flex-column mb-3 mr-3">
+                <div class="row d-flex mb-2 width-100">
+                    <div class="mt-3">
                         <div>
                             <button title="Set ship direction from LEFT to RIGHT" data-used="false"
                                     class="orientation btn btn-primary" data-orientation="right">
@@ -16,7 +16,7 @@
                             </button>
                         </div>
                     </div>
-                    <div class="mb-3 mr-3">
+                    <div class="mt-3">
                         <button class="btn btn-success" data-used="false" onclick="choose(1, 'one-0')" id="one-0">
                             <i class="fas fa-ship"></i>
                         </button>
@@ -30,7 +30,7 @@
                             <i class="fas fa-ship"></i>
                         </button>
                     </div>
-                    <div class="mb-3 mr-3">
+                    <div class="mt-3">
                         <button class="btn btn-success" data-used="false" onclick="choose(2, 'two-0')" id="two-0">
                             <i class="fas fa-ship"></i>
                             <i class="fas fa-ship"></i>
@@ -44,7 +44,7 @@
                             <i class="fas fa-ship"></i>
                         </button>
                     </div>
-                    <div class="mb-3 mr-3">
+                    <div class="mt-3">
                         <button class="btn btn-success" data-used="false" onclick="choose(3, 'three-0')" id="three-0">
                             <i class="fas fa-ship"></i>
                             <i class="fas fa-ship"></i>
@@ -56,7 +56,7 @@
                             <i class="fas fa-ship"></i>
                         </button>
                     </div>
-                    <div class="mb-3 mr-3">
+                    <div class="mt-3">
                         <button class="btn btn-success" data-used="false" onclick="choose(4, 'four-0')" id="four-0">
                             <i class="fas fa-ship"></i>
                             <i class="fas fa-ship"></i>
@@ -78,13 +78,13 @@
                     </a>
                 @endif
             </div>
-            <div class="row d-flex justify-content-around align-items-center m-3">
+            <div class="row d-flex justify-content-around align-items-center mb-5">
                 <div id="chat-body" class="row d-flex justify-content-center align-items-center"><span></span></div>
                 <input name="message" id="messageInput" placeholder="Type your message">
                 <input type="button" id="emoji-button" value=" 😀 ">
                 <input type="button" id="messageButton" value="send" onclick="messageHandler()">
             </div>
-            <div class="row d-flex justify-content-around align-items-center">
+            <div class="row d-flex justify-content-around align-items-center mb-5">
                 <div id="auth-section" class="d-flex justify-content-start align-items-center flex-column">
                     <h4>{{$authUser->name}}</h4>
                     ({{$authUser->email}})
