@@ -125,7 +125,7 @@
 @stack('js')
 <script>
     $(window).ready(function () {
-        $('#navbar').find('a[href="{{ \Request::url() }}"]').parent().addClass('active');
+        $('#navbar').find('a[href="{{ \URL::current() }}"]').parent().addClass('active');
     });
 </script>
 </body>
