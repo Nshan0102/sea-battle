@@ -6,3 +6,18 @@
 
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
+
+// Pages
+
+@import "auth/passwords/confirm-page";
+@import "auth/passwords/email-page";
+@import "auth/passwords/reset-page";
+@import 'auth/login-page';
+@import 'auth/register-page';
+
+@import 'home-page';
+@import 'instructions-page';
+@import 'room-page';
+
+
+@import "custom-styles";

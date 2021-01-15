@@ -4587,7 +4587,6 @@ input[type=button].btn-block {
   flex-basis: 100%;
   flex-grow: 1;
   align-items: center;
-
 }
 
 .navbar-toggler {
@@ -10922,5 +10921,84 @@ a.text-dark:focus {
     color: inherit;
     border-color: #dee2e6;
   }
+}
+
+#confirm-page {
+  height: calc(100vh - 56px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#email-page {
+  height: calc(100vh - 56px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#reset-page {
+  height: calc(100vh - 56px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#login-page {
+  height: calc(100vh - 56px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#register-page {
+  height: calc(100vh - 56px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#home-page {
+  height: calc(100vh - 56px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 15px;
+}
+
+#instructions-page {
+  height: calc(100vh - 56px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#room-page {
+  height: calc(100vh - 56px);
+}
+
+.navbar-light .navbar-nav .active > .nav-link,
+.navbar-light .navbar-nav .active > i,
+.navbar-light .navbar-nav .nav-link.active,
+.navbar-light .navbar-nav .nav-link.show,
+.navbar-light .navbar-nav .show > .nav-link {
+  color: #0062cc !important;
+}
+
+.nav-item:hover *,
+.nav-item:focus * {
+  color: #0062cc !important;
+}
+
+.nav-link:not([href]) {
+  cursor: not-allowed !important;
+}
+
+#site-footer {
+  z-index: 1000 !important;
+  position: fixed !important;
+  width: 100% !important;
+  bottom: 0 !important;
+  background-color: white !important;
 }
 

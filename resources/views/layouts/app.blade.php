@@ -5,9 +5,9 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta property="og:title" content="Armenian Sea Battle" />
-    <meta property="og:description" content="Join to Sea Battle and have fun with your friends" />
-    <meta property="og:image" content="{{ asset('favicon.png') }}" />
+    <meta property="og:title" content="Armenian Sea Battle"/>
+    <meta property="og:description" content="Join to Sea Battle and have fun with your friends"/>
+    <meta property="og:image" content="{{ asset('favicon.png') }}"/>
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name', 'Laravel') }}</title>
@@ -33,61 +33,78 @@
 </head>
 <body>
 <div id="app">
-    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
-                    <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'Laravel') }}
-                    </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarText">
-                <div class="navbar-nav-container">
-                    <ul class="navbar-nav">
-                        <!-- Authentication Links -->
-                        @guest
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;z-index: 1000;">
+        <a class="navbar-brand" href="{{ url('/') }}">
+            {{ config('app.name', 'Laravel') }}
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
+                aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+            <div class="navbar-nav-container" id="navbar">
+                <ul class="navbar-nav">
+                    <!-- Authentication Links -->
+                    @guest
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('login') }}">
+                                <i class="fas fa-sign-in-alt"></i>
+                                {{ __('Login') }}
+                            </a>
+                        </li>
+                        @if (Route::has('register'))
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                            </li>
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
-                        @else
-
-                        @endguest
-                    </ul>
-                    @if(Auth::user())
-                        <ul class="navbar-nav  ">
-                            <li class="nav-item">
-                                <i class="fa fa-envelope icon"></i>
-                                <a class="nav-link" >Messages</a>
-                            </li>
-                            <li class="nav-item">
-                                <i class="fa fa-chalkboard-teacher icon"></i>
-                                <a class="nav-link" >Instructions</a>
-                            </li>
-                            <li class="nav-item">
-                                <i class="fas fa-users icon"></i>
-                                <a class="nav-link" href="{{ route('sea-battle-team') }}" >Sea Battle Team</a>
-                            </li>
-                            <li class="nav-item">
-                                <i class="fas fa-sign-out-alt icon"></i>
-                                <a class="nav-link" href="{{ route('logout') }}"
-                                   onclick="event.preventDefault();
-                                document.getElementById('logout-form').submit();">
-                                    {{ __('Logout') }}
+                                <a class="nav-link" href="{{ route('register') }}">
+                                    <i class="fas fa-user-plus"></i>
+                                    {{ __('Register') }}
                                 </a>
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                    @csrf
-                                </form>
                             </li>
-                        </ul>
+                        @endif
+                    @endguest
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('instructions') }}">
+                            <i class="fa fa-chalkboard-teacher icon"></i>
+                            Instructions
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('sea-battle-team') }}">
+                            <i class="fas fa-users icon"></i>
+                            Sea Battle Team
+                        </a>
+                    </li>
+                    @if(Auth::user())
+                        <li class="nav-item">
+                            <a class="nav-link">
+                                <i class="fa fa-envelope icon"></i>
+                                Messages
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('logout') }}"
+                               onclick="event.preventDefault();
+                                document.getElementById('logout-form').submit();">
+                                <i class="fas fa-sign-out-alt icon"></i>
+                                {{ __('Logout') }}
+                            </a>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
+                        </li>
                     @endif
-                </div>
+                </ul>
             </div>
-        </nav>
+        </div>
+    </nav>
     @yield('content')
+</div>
+<div id="site-footer" class="card-footer">
+    <div class="d-flex flex-row justify-content-around align-items-center">
+        Made for fun <br>
+        <a href="{{route('sea-battle-team')}}">Sea Battle Team</a>
+    </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"
         integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
@@ -101,10 +118,15 @@
     @if(session('error'))
         toastr["error"](session('error')['header'], session('error')['message'], {'progressBar': true});
     @endif
-    @if(session('success'))
+        @if(session('success'))
         toastr["success"](session('success')['header'], session('success')['message'], {'progressBar': true});
     @endif
 </script>
 @stack('js')
+<script>
+    $(window).ready(function () {
+        $('#navbar').find('a[href="{{ \Request::url() }}"]').parent().addClass('active');
+    });
+</script>
 </body>
 </html>
