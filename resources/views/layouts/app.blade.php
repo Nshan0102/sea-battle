@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta property="og:title" content="Armenian Sea Battle"/>
     <meta property="og:description" content="Join to Sea Battle and have fun with your friends"/>
-    <meta property="og:image" content="{{ asset('favicon.png') }}"/>
+    <meta property="og:image" content="{{ asset('img/logo.png') }}"/>
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name', 'Laravel') }}</title>
@@ -34,8 +34,8 @@
 <body>
 <div id="app">
     <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;z-index: 1000;">
-        <a class="navbar-brand" href="{{ url('/') }}">
-            {{ config('app.name', 'Laravel') }}
+        <a class="navbar-brand" id="header-logo-link" href="{{ url('/') }}">
+            <img id="header-logo-img" src="{{ asset('img/logo_transparent.png') }}" alt="{{ config('app.name', 'Sea-Battle') }}">
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
                 aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,6 +60,13 @@
                                 </a>
                             </li>
                         @endif
+                    @else
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('home') }}">
+                                <i class="fas fa-home"></i>
+                                Home
+                            </a>
+                        </li>
                     @endguest
                 </ul>
                 <ul class="navbar-nav">

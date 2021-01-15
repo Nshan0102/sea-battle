@@ -87,42 +87,55 @@ td {
 }
 
 
-.navbar-nav{
+.navbar-nav {
     color: #6b6b6b;
     text-align: center;
     text-transform: none;
     font-weight: 600;
 }
+
 .mobile-menu-content {
     display: flex;
     justify-content: flex-end;
 }
+
 @media (max-width: 990px) {
     .navbar-nav-container {
         height: 100vh;
-        margin-top:20px;
-        justify-content: center!important;
+        margin-top: 20px;
+        /*justify-content: center!important;*/
     }
+
+    .nav-item .nav-link {
+        margin: 0 !important;
+        padding: 0!important;
+    }
+
     .menu-item-container {
         flex-direction: column;
     }
 }
+
 .navbar-nav-container {
     width: 100%;
     display: flex;
     justify-content: flex-end;
 }
+
 .menu-item-container {
     display: flex;
 }
+
 .nav-item {
     display: flex;
     align-items: center;
     margin-right: 15px;
 }
+
 .nav-item .nav-link {
-    padding-left: 5px!important;
+    padding-left: 5px !important;
 }
+
 .navbar-toggler:focus {
-    outline: none!important;
+    outline: none !important;
 }
