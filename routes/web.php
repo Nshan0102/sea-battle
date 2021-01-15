@@ -22,6 +22,14 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::get('/sea-battle-team', function () {
+    return view('team');
+})->name('sea-battle-team');
+
+Route::get('/instructions', function () {
+    return view('instructions');
+})->name('instructions');
+
 Route::middleware('auth')->group(function (){
     Route::get('/play', 'RoomController@create')->name('play');
 
@@ -38,8 +46,6 @@ Route::middleware('auth')->group(function (){
     Route::post('/fire/{room}', 'RoomController@fire')->name('fire');
 
     Route::post('/message/{room}', 'RoomController@message')->name('message');
-
-    Route::get('/sea-battle-team', 'HomeController@seaBattleTeam')->name('sea-battle-team');
 });
 
 

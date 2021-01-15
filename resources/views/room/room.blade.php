@@ -69,7 +69,7 @@
         </div>
     </nav>
     <main class="py-4">
-        <div class="container">
+        <div class="container" id="room-page">
             <div id="join-link-section" class="row d-flex justify-content-around align-items-center m-3">
                 @if($room->owner->id == $authUser->id && !$room->opponent)
                     <a title="Send this link to your friend (click to copy)"
