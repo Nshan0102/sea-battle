@@ -68,8 +68,8 @@
             @endif
         </div>
     </nav>
-    <main class="py-4">
-        <div class="container" id="room-page">
+    <main class="py-4 mb-5">
+        <div class="container mb-5" id="room-page">
             <div id="join-link-section" class="row d-flex justify-content-around align-items-center m-3">
                 @if($room->owner->id == $authUser->id && !$room->opponent)
                     <a title="Send this link to your friend (click to copy)"
@@ -84,7 +84,7 @@
                 <input type="button" id="emoji-button" value=" 😀 ">
                 <input type="button" id="messageButton" value="send" onclick="messageHandler()">
             </div>
-            <div class="row d-flex justify-content-around align-items-center" style="margin-bottom: 150px! important">
+            <div class="row d-flex justify-content-around align-items-center" style="margin-bottom: 200px! important">
                 <div id="auth-section" class="d-flex justify-content-start align-items-center flex-column">
                     <h4>{{$authUser->name}}</h4>
                     ({{$authUser->email}})
