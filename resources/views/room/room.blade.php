@@ -84,7 +84,7 @@
                 <input type="button" id="emoji-button" value=" 😀 ">
                 <input type="button" id="messageButton" value="send" onclick="messageHandler()">
             </div>
-            <div class="row d-flex justify-content-around align-items-center mb-5">
+            <div class="row d-flex justify-content-around align-items-center" style="margin-bottom: 150px! important">
                 <div id="auth-section" class="d-flex justify-content-start align-items-center flex-column">
                     <h4>{{$authUser->name}}</h4>
                     ({{$authUser->email}})
