@@ -78,16 +78,15 @@
                     </a>
                 @endif
             </div>
-            <div class="row d-flex justify-content-around align-items-center mb-5">
+            <div class="row d-flex justify-content-around align-items-center mb-5 w-100">
                 <div id="chat-body" class="row d-flex justify-content-center align-items-center"><span></span></div>
                 <input name="message" id="messageInput" placeholder="Type your message">
                 <input type="button" id="emoji-button" value=" 😀 ">
                 <input type="button" id="messageButton" value="send" onclick="messageHandler()">
             </div>
-            <div class="row d-flex justify-content-around align-items-center" style="margin-bottom: 200px! important">
+            <div class="row d-flex align-items-center justify-content-around w-100" style="margin-bottom: 6rem!important;">
                 <div id="auth-section" class="d-flex justify-content-start align-items-center flex-column">
                     <h4>{{$authUser->name}}</h4>
-                    ({{$authUser->email}})
                     <div class="d-flex justify-content-around align-items-center w-100">
                         <a href="javascript:void(0)" onclick="toggleBoard(this)">Hide my board</a>
                         <span class="pl-2 pr-2"> / </span>
@@ -242,26 +241,24 @@
                 <div class="d-block d-md-none width-100">
                     <hr>
                 </div>
-                <div id="opponent-section"
-                     class="justify-content-start align-items-center flex-column {{$room->owner->id == $authUser->id && !$room->opponent ? 'd-none' : "d-flex"}}"
-                >
+                <div id="opponent-section" class="justify-content-start align-items-center flex-column {{$room->owner->id == $authUser->id && !$room->opponent ? 'd-none' : "d-flex"}}">
                     @if($room->owner->id == $authUser->id && $room->opponent)
                         <h4 id="opponent-name">{{$room->opponent->name}}</h4>
                         <div>
                             <span id="opponent-email">({{$room->opponent->email}})</span>
-                            <a id="add-friend" class="d-none" href="">Add Friend</a>
+                            <a id="add-friend" href="">Add Friend</a>
                         </div>
                     @elseif($room->opponent_id == $authUser->id && $room->owner)
                         <h4 id="opponent-name">{{$room->owner->name}}</h4>
                         <div>
                             <span id="opponent-email">({{$room->owner->email}})</span>
-                            <a id="add-friend" class="d-none" href="">Add Friend</a>
+                            <a id="add-friend" href="">Add Friend</a>
                         </div>
                     @else
                         <h4 id="opponent-name"></h4>
                         <div class="d-none">
                             <span id="opponent-email"></span>
-                            <a id="add-friend" class="d-none" href="">Add Friend</a>
+                            <a id="add-friend" href="">Add Friend</a>
                         </div>
                     @endif
                     <table id="opponent">
@@ -444,7 +441,7 @@
                 toastr["success"](`Player ${name} has joined!`, 'Hey!', {'progressBar': true});
                 $("#opponent-name").html(name);
                 $("#opponent-email").html(`( ${email} )`);
-                $("#add-friend").removeClass('d-none');
+                $("#add-friend").parent().removeClass('d-none');
                 $("#join-link-section").removeClass('d-flex').addClass('d-none');
                 $("#opponent-section").removeClass('d-none').addClass('d-flex');
             }).listen('.opponent-left-{{$authUser->id}}', (e) => {
@@ -453,7 +450,7 @@
                 $("#opponent-section").removeClass('d-flex').addClass('d-none');
                 $("#opponent-email").html("");
                 $("#opponent-name").html("");
-                $("#add-friend").addClass('d-none');
+                $("#add-friend").parent().addClass('d-none');
                 $("#join-link-section").removeClass('d-none').addClass('d-flex');
             }).listen('.message-{{$authUser->id}}', (e) => {
                 appendMessage(e.message, 'black');
