@@ -2,10 +2,10 @@
     align-items: center !important;
 }
 
-@media (max-width: 990px){
+@media (max-width: 990px) {
     .navbar-nav-container {
-        flex-direction: column!important;
-        justify-content: flex-start!important;
+        flex-direction: column !important;
+        justify-content: flex-start !important;
     }
 }
 
@@ -40,4 +40,13 @@
 #header-logo-link {
     margin: 0;
     padding: 0;
+}
+
+#chat-body::-webkit-scrollbar, html::-webkit-scrollbar {
+    width: 5px;
+    background-color: #a5b7c5;
+}
+
+#chat-body::-webkit-scrollbar-thumb, html::-webkit-scrollbar-thumb {
+    background-color: #0b69ce;
 }

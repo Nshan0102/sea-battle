@@ -11041,3 +11041,14 @@ a.text-dark:focus {
   padding: 0;
 }
 
+#chat-body::-webkit-scrollbar,
+html::-webkit-scrollbar {
+  width: 5px;
+  background-color: #a5b7c5;
+}
+
+#chat-body::-webkit-scrollbar-thumb,
+html::-webkit-scrollbar-thumb {
+  background-color: #0b69ce;
+}
+

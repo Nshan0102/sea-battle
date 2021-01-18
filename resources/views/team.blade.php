@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container">
-         <div class="p-3">
+         <div class="p-3 mb-5">
              <h2 class="d-flex justify-content-center mb-3 text-center">SEA BATTLE TEAM</h2>
              <div class="row mt-5">
                  <div class="col-md-6 img d-flex justify-content-center">
