@@ -42,7 +42,7 @@ class RoomController extends Controller
         if ($user->ownerRoom && $request->force) {
             $user->ownerRoom->delete();
         } elseif ($user->ownerRoom) {
-            return redirect(route('enter-the-room', $user->ownerRoom));
+            return redirect(route('sea-battle.enter-the-room', $user->ownerRoom));
         }
         $room = Room::create([
             'opponent_fires' => '[]',
@@ -54,7 +54,7 @@ class RoomController extends Controller
             'turn' => $user->id,
             'started_at' => Carbon::now()
         ]);
-        return redirect(route('enter-the-room', $room));
+        return redirect(route('sea-battle.enter-the-room', $room));
     }
 
     /**
@@ -72,7 +72,7 @@ class RoomController extends Controller
                     event(new OpponentJoined($room->opponent, $user, $room->id));
                 }
             }
-            return view('room.room')->with([
+            return view('games.sea-battle.room.room')->with([
                 'authUser' => $user,
                 'room' => $room
             ]);
@@ -103,7 +103,7 @@ class RoomController extends Controller
                 $user->ownerRoom->delete();
             } else {
                 // enter the room
-                return redirect()->route('enter-the-room', $room);
+                return redirect()->route('sea-battle.enter-the-room', $room);
             }
         }
         // when user was opponent in other room
@@ -117,7 +117,7 @@ class RoomController extends Controller
             'opponent_id' => $user->id
         ]);
         event(new OpponentJoined($room->owner, $user, $room->id));
-        return view('room.room')->with([
+        return view('games.sea-battle.room.room')->with([
             'authUser' => $user,
             'room' => $room
         ]);

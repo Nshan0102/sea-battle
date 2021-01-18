@@ -411,11 +411,11 @@
         </div>
     </main>
     @if($room->owner_id == $authUser->id)
-        <input type="hidden" id="room_update_url" value="{{route('update-room-as-owner', $room)}}">
+        <input type="hidden" id="room_update_url" value="{{route('sea-battle.update-room-as-owner', $room)}}">
     @elseif($room->opponent_id == $authUser->id)
-        <input type="hidden" id="room_update_url" value="{{route('update-room-as-opponent', $room)}}">
+        <input type="hidden" id="room_update_url" value="{{route('sea-battle.update-room-as-opponent', $room)}}">
     @endif
-    <input type="hidden" id="fire_url" value="{{route('fire', $room)}}">
+    <input type="hidden" id="fire_url" value="{{route('sea-battle.fire', $room)}}">
     <div>
         <audio id="new-message" src="{{asset('assets/sounds/new-message.mp3')}}"></audio>
     </div>
@@ -490,7 +490,7 @@
         $(window).ready(function () {
             $.ajax({
                 type: 'GET',
-                url: "{{route('get-my-ships', $room)}}",
+                url: "{{route('sea-battle.get-my-ships', $room)}}",
                 dataType: 'JSON',
                 success: function (res) {
                     if (res.ships) {
@@ -534,7 +534,7 @@
         function sendMessage(message) {
             $.ajax({
                 type: 'POST',
-                url: "{{route('message', $room)}}",
+                url: "{{route('sea-battle.message', $room)}}",
                 dataType: 'JSON',
                 data: {
                     message: message

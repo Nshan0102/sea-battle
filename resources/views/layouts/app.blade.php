@@ -20,7 +20,7 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/css/main.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/css/games/sea-battle/main.css') }}" rel="stylesheet">
     <link rel="stylesheet"
           href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
@@ -35,7 +35,7 @@
 <div id="app">
     <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;z-index: 1000;">
         <a class="navbar-brand" id="header-logo-link" href="{{ url('/') }}">
-            <img id="header-logo-img" src="{{ asset('img/logo_transparent.png') }}" alt="{{ config('app.name', 'Sea-Battle') }}">
+            <img id="header-logo-img" src="{{ asset('img/games/sea-battle/logo_transparent.png') }}" alt="{{ config('app.name', 'Sea-Battle') }}">
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
                 aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
@@ -71,13 +71,13 @@
                 </ul>
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('instructions') }}">
+                        <a class="nav-link" href="{{ route('sea-battle.instructions') }}">
                             <i class="fa fa-chalkboard-teacher icon"></i>
                             Instructions
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('sea-battle-team') }}">
+                        <a class="nav-link" href="{{ route('team') }}">
                             <i class="fas fa-users icon"></i>
                             Sea Battle Team
                         </a>
@@ -110,7 +110,7 @@
 <div id="site-footer" class="card-footer">
     <div class="d-flex flex-row justify-content-around align-items-center">
         Made for fun <br>
-        <a href="{{route('sea-battle-team')}}">Sea Battle Team</a>
+        <a href="{{route('team')}}">Sea Battle Team</a>
     </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"
@@ -120,7 +120,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script src="{{ asset('js/app.js') }}"></script>
 <script src="{{asset('assets/js/toastr-init.js')}}"></script>
-<script src="{{asset('assets/js/main.js')}}"></script>
+<script src="{{asset('assets/js/games/sea-battle/main.js')}}"></script>
 <script>
     @if(session('error'))
         toastr["error"](session('error')['header'], session('error')['message'], {'progressBar': true});
